@@ -25,6 +25,7 @@ switch (params[2]) {
         let data = JSON.stringify(todos);
         let nulis = fs.writeFileSync('todo.json', data)
         console.log(`'${params[3]}' telah ditambahkan.`);
+        // cara panggil memakai string contoh ==> git challenge13 add "saya pergi ke pasar"
         break;
     case "delete":
         todos.splice(0, params[3])
