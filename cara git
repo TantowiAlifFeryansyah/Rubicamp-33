@@ -1,0 +1,14 @@
+git add . 
+= jika ingin add semua file
+
+git add namafile
+= jika ingin add 1 file
+
+git status (udah ijo apa belum)
+= cek status terkini
+
+git commit -m "nama tugas"
+= untuk checkpoint
+
+
+git push origin
