@@ -10,8 +10,6 @@ const fs = require("fs")
 const params = process.argv
 const todos = JSON.parse(fs.readFileSync("todo.json", "utf-8"));
 
-// console.log(todos)
-
 
 switch (params[2]) {
     case "list":
@@ -24,7 +22,6 @@ switch (params[2]) {
         break;
     case "add":
         todos.push({ task: params[3], complete: false })
-        // console.log(todos)
         let data = JSON.stringify(todos);
         let nulis = fs.writeFileSync('todo.json', data)
         console.log(`'${params[3]}' telah ditambahkan.`);
@@ -62,8 +59,20 @@ switch (params[2]) {
         });
         break;
     case "tag":
+        todos[params[3] - 1].tag = `${params[4]}`;
+        todos[params[3] - 1].tag1 = `${params[5]}`;
+        let data4 = JSON.stringify(todos);
+        let nulis4 = fs.writeFileSync('todo.json', data4)
+        console.log(`Tag '${params[4]},${params[5]}' telah ditambahkan ke daftar '${todos[params[3] - 1].task}'`);
         break;
     case "filter":
+        console.log('Daftar Pekerjaan');
+        for (let i = 0; i < todos.length; i++) {
+            if (params[3] == todos[i].tag || params[3] == todos[i].tag1) {
+                console.log(todos[i].task);
+            }
+        }
+        // contoh cara panggil ==> node challenge13.js filter masak 
         break;
     default:
         console.log(`>>> JS TODO <<<`);
