@@ -31,7 +31,7 @@ SELECT Matkul.Code, Mahasiswa.NIM, Mahasiswa.Nama, SUM(SKS) 'TOTAL SKS' FROM Men
 SELECT Mengambil.Code, Matkul.Nama, Mahasiswa.NIM, Mahasiswa.Nama FROM Mengambil INNER JOIN Mahasiswa on Mengambil.NIM = Mahasiswa.NIM INNER JOIN Matkul on Matkul.Code = Mengambil.Code WHERE Matkul.Nama = 'Data Mining' ORDER BY Mahasiswa.NIM;
 
 -- 6.
-SELECT Dosen.Nama,(COUNT(Mahasiswa.Nama)) as 'Total Mahasiswa' FROM Mahasiswa INNER JOIN Mengambil on Mahasiswa.NIM = Mengambil.NIM INNER JOIN Mengajar on Mengajar.Code = Mengambil.Code INNER JOIN Dosen on Dosen.NIP = Mengajar.NIP GROUP BY DOSEN.Nama;
+SELECT Dosen.Nama,(COUNT(Mahasiswa.Nama)) as 'Total Mahasiswa' FROM Mahasiswa INNER JOIN Mengambil on Mahasiswa.NIM = Mengambil.NIM INNER JOIN Mengajar on Mengajar.Code = Mengambil.Code INNER JOIN Dosen on Dosen.NIP = Mengajar.NIP GROUP BY Dosen.NIP;
 
 -- 7.
 SELECT * FROM Mahasiswa ORDER BY Umur;
