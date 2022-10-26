@@ -38,6 +38,7 @@ SELECT * FROM Mahasiswa ORDER BY Umur;
 SELECT * FROM Mahasiswa ORDER BY Umur DESC;
 
 -- 8.
-SELECT Mahasiswa.Nama, Mahasiswa.Jurusan, Mengambil.Nilai, Dosen.Nama FROM Mahasiswa INNER JOIN Mengambil on Mahasiswa.NIM = Mengambil.NIM INNER JOIN Dosen INNER JOIN Mengajar on Dosen.NIP = Mengajar.NIP WHERE Nilai > 'C';
+SELECT Mahasiswa.Nama, Mahasiswa.Jurusan, Mengambil.Nilai, Dosen.Nama FROM Mahasiswa INNER JOIN Mengambil on Mahasiswa.NIM = Mengambil.NIM INNER JOIN Mengajar on Mengajar.Code = Mengambil.Code INNER JOIN Dosen on Dosen.NIP = Mengajar.NIP WHERE Nilai > 'C';
+
 
 
