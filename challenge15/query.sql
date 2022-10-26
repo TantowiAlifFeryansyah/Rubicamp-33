@@ -32,6 +32,9 @@ SELECT Nama, SUM(SKS) 'TOTAL SKS' FROM KRS GROUP BY Nama HAVING SUM(SKS) > 10;
 SELECT Matkul.*, Mahasiswa.NIM, Mahasiswa.Nama FROM Matkul JOIN Mahasiswa WHERE Matkul.Nama = 'Data Mining';
 
 -- 6.
+SELECT Mengajar.*, Mengambil.NIM, Mahasiswa.Nama FROM Mengajar INNER JOIN Mengambil on Mengajar.Code = Mengambil.Code INNER JOIN Mahasiswa on Mahasiswa.NIM = Mengambil.NIM GROUP BY Mengajar.Code ORDER BY NIP;
+
+
 
 -- 7.
 SELECT * FROM Mahasiswa ORDER BY Umur;
