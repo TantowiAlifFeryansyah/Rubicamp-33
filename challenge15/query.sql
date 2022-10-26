@@ -35,8 +35,6 @@ SELECT Matkul.*, Mahasiswa.NIM, Mahasiswa.Nama FROM Matkul JOIN Mahasiswa WHERE 
 -- 6.
 SELECT Mengajar.*, Mengambil.NIM, Mahasiswa.Nama FROM Mengajar INNER JOIN Mengambil on Mengajar.Code = Mengambil.Code INNER JOIN Mahasiswa on Mahasiswa.NIM = Mengambil.NIM GROUP BY Mengajar.Code ORDER BY NIP;
 
-SELECT Mahasiswa.Nama, Mahasiswa.Jurusan, Dosen.Nama FROM Mahasiswa INNER JOIN 
-
 -- 7.
 SELECT * FROM Mahasiswa ORDER BY Umur;
 SELECT * FROM Mahasiswa ORDER BY Umur DESC;
