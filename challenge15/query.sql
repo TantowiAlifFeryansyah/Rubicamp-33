@@ -3,7 +3,8 @@ CREATE TABLE Mahasiswa (NIM varchar(20) primary key not null, Nama varchar(100) 
 CREATE TABLE Matkul (Code varchar(10) primary key not null, Nama varchar(100) not null, SKS numeric not null);
 CREATE TABLE Dosen (NIP varchar(10) primary key not null, Nama varchar(100) not null, Alamat text not null);
 CREATE TABLE Mengajar(id integer primary key autoincrement, NIP varchar(10) not null, Nama varchar(100) not null, Code varchar(10) not null, foreign key(NIP) references Dosen(NIP), foreign key(Code) references Matkul(Code),foreign key(Nama) references Dosen(Nama));
-CREATE TABLE Mengambil(id integer primary key autoincrement, NIM varchar(10) not null, Code varchar(10) not null, Nilai varchar(5) not null, foreign key(NIM) references Mahasiswa(NIM), foreign key(Code) references Matkul(Code));
+CREATE TABLE Mengambil(id integer primary key autoincrement, NIM varchar(10) not null, Nama varchar(100) not null, Code varchar(10) not null,SKS numeric not null, Nilai varchar(5) not null, foreign key(NIM) references Mahasiswa(NIM), foreign key(Code) references Matkul(Code) foreign key(SKS) references Matkul(SKS),foreign key(Nama) references Mahasiswa(Nama) );
+INSERT INTO Mengambil(NIM,Nama, Code, SKS, Nilai) VALUES('MHS0001','Tantowi', 'MK0001',3,'A'), ('MHS0002','Alif', 'MK0002',3,'B'), ('MHS0003','Feryansyah', 'MK0003',3,'C'), ('MHS0004','Abi', 'MK0004',2,'D'), ('MHS0005','Tanaya', 'MK0005',2,'E'), ('MHS0001','Tantowi', 'MK0006',3,'A'), ('MHS0002','Alif', 'MK0007',3,'B'), ('MHS0003','Feryansyah', 'MK0008',3,'C'), ('MHS0004','Abi', 'MK0009',2,'D'), ('MHS0005','Tanaya', 'MK0001',3,'E'), ('MHS0001','Tantowi', 'MK0002',3,'A'), ('MHS0001' ,'Tantowi', 'MK0003',3,'B'), ('MHS0002','Alif', 'MK0009',2,'C'), ('MHS0002','Alif', 'MK0003',3,'D'), ('MHS0002','Alif', 'MK0006',3,'E');
 CREATE TABLE KRS(Nama varchar(100) not null, Code varchar(10)not null,SKS numeric not null, foreign key(Nama) references Mahasiswa(Nama), foreign key(Code) references Matkul(Code), foreign key(SKS) references Matkul(SKS));
 
 
@@ -26,7 +27,7 @@ SELECT * FROM Mahasiswa WHERE Umur < 20;
 SELECT Mengambil.*, Mahasiswa.Nama FROM Mengambil JOIN Mahasiswa on Mahasiswa.NIM = Mengambil.NIM WHERE Nilai < 'B';
 
 -- 4.
-SELECT Nama, SUM(SKS) 'TOTAL SKS' FROM KRS GROUP BY Nama HAVING SUM(SKS) > 10;
+SELECT Nama, SUM(SKS) 'TOTAL SKS' FROM Mengambil GROUP BY Nama HAVING SUM(SKS) > 10;
 
 -- 5.
 SELECT Matkul.*, Mahasiswa.NIM, Mahasiswa.Nama FROM Matkul JOIN Mahasiswa WHERE Matkul.Nama = 'Data Mining';
@@ -39,7 +40,6 @@ SELECT Mahasiswa.Nama, Mahasiswa.Jurusan, Dosen.Nama FROM Mahasiswa INNER JOIN
 -- 7.
 SELECT * FROM Mahasiswa ORDER BY Umur;
 SELECT * FROM Mahasiswa ORDER BY Umur DESC;
-
 
 -- 8.
 SELECT Mahasiswa.Nama, Mahasiswa.Jurusan, Mengambil.Nilai, Dosen.Nama FROM Mahasiswa INNER JOIN Mengambil on Mahasiswa.NIM = Mengambil.NIM INNER JOIN Dosen WHERE Nilai > 'C';
