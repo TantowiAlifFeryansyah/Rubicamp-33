@@ -21,12 +21,21 @@ OOP, inheritance, class, composition, aggregation, static method, prototype meth
 
 class Tyre {
     constructor(brand, size){
-
+        this.brand = brand;
+        this.size = size;
     }
 }
 
 class Car {
-
+    constructor(varian, sn, door, seat, Tyre, year, warranty){
+        this.varian = varian;
+        this.sn = sn;
+        this.door = door;
+        this.seat = seat;
+        this.Tyre = Tyre;
+        this.year = year;
+        this.warranty = warranty;
+    }
 }
 
 class CarFactory {
@@ -45,7 +54,7 @@ class CarFactory {
 }
 
 const toyota = new CarFactory()
-toyota.produce(2020)
-toyota.produce(2022)
-toyota.result()
-toyota.guaranteeSimulation(2025)
+// toyota.produce(2020)
+// toyota.produce(2022)
+// toyota.result()
+// toyota.guaranteeSimulation(2025)
