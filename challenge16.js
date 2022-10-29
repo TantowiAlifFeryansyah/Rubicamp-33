@@ -24,19 +24,38 @@ class Tyre {
         this.brand = brand;
         this.size = size;
     }
-}
 
-class Car {
-    constructor(varian, sn, door, seat, Tyre, year, warranty){
+}
+// const agya = new Tyre('dunlop',15);
+// const rush = new Tyre('Bridgestone',17);
+// console.log(agya);
+// console.log(rush);
+// console.log(`tyre : ${agya.brand} ${agya.size} inch`);
+// console.log(`tyre : ${rush.brand} ${rush.size} inch`);
+
+
+class Car extends Tyre{
+    constructor(varian, sn, door, seat, year, brand, size, warranty){
+        super(brand, size);
+
         this.varian = varian;
         this.sn = sn;
         this.door = door;
         this.seat = seat;
-        this.Tyre = Tyre;
         this.year = year;
         this.warranty = warranty;
     }
+    atribut(){
+        console.log(`Varian : ${this.varian} \n sn : ${this.sn} \n door : ${this.door} \n seat : ${this.seat} seater \n tyre : ${this.brand} ${this.size} inch \n waranty : ${this.warranty} year`);
+    }
 }
+
+
+var agya = new Car('Agya', 'sn', 5, 5, 2020,'dunlop',15, 1);
+var rush = new Car('Rush', 'sn', 5, 5, 2020, 'Bridgestone', 17, 3);
+agya.atribut();
+rush.atribut();
+
 
 class CarFactory {
     constructor() {
