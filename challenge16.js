@@ -71,20 +71,18 @@ class Car extends Tyre{
 
 class Agya extends Car {
     constructor(){
-        super('Agya', 5, 5, 2022,1)
-        // this.sn = this.serial();
+        super('Agya', 5, 5, 2022)
+        this.sn = this.serial();
         this.brand = 'dunlop'
         this.size = 15;
     }
-    serial(){
-        super()
-    }
+
 }
 
 class Rush extends Car {
     constructor(){
-        super('Rush', 5, 5,2020,2)
-        // this.sn = this.serial()
+        super('Rush', 5, 5,2020)
+        this.sn = this.serial()
         this.brand = 'Bridgestone'
         this.size = 17;
     }
@@ -98,7 +96,7 @@ class CarFactory{
     produce(year) { 
         for (let i = 0; i < Math.random() * 6; i++ ){
             this.cars.push(new Agya(year));
-            // console.log(this.cars);
+            console.log(this.cars);
         }
         for (let i = 0; i < Math.random() * 6; i++ ){
             this.cars.push(new Rush(year));
@@ -108,21 +106,24 @@ class CarFactory{
 
     guaranteeSimulation(simulationYear) {
         let count = 0;
+        let angka = Math.random() * 5
+        let nambah = Math.ceil(angka)
         for(let i = 0; i < this.cars.length; i++){
-            if (simulationYear > this.cars[i].year){
-                count++
-                console.log(`\nno. ${count}`);
-                console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${this.cars[i].warranty} year\nSn : ${this.serial}`);
-            }
+             if (simulationYear > this.cars[i].year){
+                if (this.cars[i].year + nambah >= simulationYear){
+                    count++
+                    console.log(`\nno. ${count}`);
+                    console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${nambah} year\nSn : ${this.sn}`);
+                    console.log(`Status on 2025 this guarantee status active`);
+                }
+                else {
+                    count++
+                    console.log(`\nno. ${count}`);
+                    console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${nambah} year\nSn : ${this.sn}`);
+                    console.log(`Status on 2025 this guarantee status expired`);
+                }
 
-            // if (this.cars[i].year + this.cars[i].warranty == simulationYear){
-            //     count++
-            //     console.log(`\nno. ${count}`);
-            //     console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${this.cars[i].warranty} year`);
-            // }
-            // else{
-            //     console.log('kurang beruntung');
-            // }
+            }
         }
 
     }
@@ -132,5 +133,4 @@ class CarFactory{
 const toyota = new CarFactory()
 toyota.produce(2020)
 toyota.produce(2022)
-// toyota.result()
 toyota.guaranteeSimulation(2025)
