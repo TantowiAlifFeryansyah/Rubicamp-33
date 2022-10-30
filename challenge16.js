@@ -27,15 +27,41 @@ class Tyre {
 }
 
 class Car extends Tyre{
-    constructor(varian, door, seat, year, warranty,sn) {
+    constructor(varian, door, seat, year, warranty) {
         super()
         this.varian = varian;
         this.door = door;
         this.seat = seat;
         this.year = year;
         this.warranty = warranty;
-        this.sn = sn;
+        // this.sn = sn;
     }
+}
+
+class Agya extends Car {
+    constructor(){
+        super('Agya', 5, 5, 2022)
+        this.brand = 'dunlop'
+        this.size = 15;
+    }
+
+}
+
+class Rush extends Car {
+    constructor(){
+        super('Rush', 5, 5,2020)
+        this.brand = 'Bridgestone'
+        this.size = 17;
+    }
+}
+
+class CarFactory{
+    constructor() {
+        this.cars = []
+        this.sn = ''
+        this.snumber = [];
+    }
+
     serial() {
         let characters = '1234567890abcdefghijklmnopqrstuABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let charsCount = 12;
@@ -65,42 +91,19 @@ class Car extends Tyre{
             randomSerial5 += characters[Math.floor(Math.random() * characters.length)];
         }
 
-        console.log(`${randomSerial1.substring(0,8)} - ${randomSerial2.substring(0,4)} - ${randomSerial3.substring(0,4)} - ${randomSerial4.substring(0,4)} - ${randomSerial5}`);
-    }
-}
+        this.sn = (`${randomSerial1.substring(0,8)} - ${randomSerial2.substring(0,4)} - ${randomSerial3.substring(0,4)} - ${randomSerial4.substring(0,4)} - ${randomSerial5}`)
 
-class Agya extends Car {
-    constructor(){
-        super('Agya', 5, 5, 2022)
-        // this.sn = this.serial();
-        this.brand = 'dunlop'
-        this.size = 15;
-    }
-
-}
-
-class Rush extends Car {
-    constructor(){
-        super('Rush', 5, 5,2020)
-        // this.sn = this.serial()
-        this.brand = 'Bridgestone'
-        this.size = 17;
-    }
-}
-
-class CarFactory{
-    constructor() {
-        this.cars = []
+        console.log(this.sn);
     }
 
     produce(year) { 
         for (let i = 0; i < Math.random() * 6; i++ ){
             this.cars.push(new Agya(year));
-            // console.log(this.cars);
+            this.snumber.push(this.sn)
         }
         for (let i = 0; i < Math.random() * 6; i++ ){
             this.cars.push(new Rush(year));
-            // console.log(this.cars[i]);
+            this.snumber.push(this.sn)
         }
     }
 
@@ -113,13 +116,13 @@ class CarFactory{
                 if (this.cars[i].year + nambah >= simulationYear){
                     count++
                     console.log(`\nno. ${count}`);
-                    console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${nambah} year\nSn : ${this.sn}`);
+                    console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${nambah} year\nSn : ${this.snumber[i]}`);
                     console.log(`Status on 2025 this guarantee status active`);
                 }
                 else {
                     count++
                     console.log(`\nno. ${count}`);
-                    console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${nambah} year\nSn : ${this.sn}`);
+                    console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${nambah} year\nSn : ${this.snumber[i]}`);
                     console.log(`Status on 2025 this guarantee status expired`);
                 }
 
@@ -131,6 +134,7 @@ class CarFactory{
 }
 
 const toyota = new CarFactory()
+toyota.serial()
 toyota.produce(2020)
 toyota.produce(2022)
 toyota.guaranteeSimulation(2025)
