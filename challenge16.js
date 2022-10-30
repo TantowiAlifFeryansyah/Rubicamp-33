@@ -20,60 +20,117 @@ OOP, inheritance, class, composition, aggregation, static method, prototype meth
 */
 
 class Tyre {
-    constructor(brand, size){
+    constructor(brand, size) {
         this.brand = brand;
         this.size = size;
     }
-
 }
-// const agya = new Tyre('dunlop',15);
-// const rush = new Tyre('Bridgestone',17);
-// console.log(agya);
-// console.log(rush);
-// console.log(`tyre : ${agya.brand} ${agya.size} inch`);
-// console.log(`tyre : ${rush.brand} ${rush.size} inch`);
-
 
 class Car extends Tyre{
-    constructor(varian, sn, door, seat, year, brand, size, warranty){
-        super(brand, size);
-
+    constructor(varian, door, seat, year, warranty,sn) {
+        super()
         this.varian = varian;
-        this.sn = sn;
         this.door = door;
         this.seat = seat;
         this.year = year;
         this.warranty = warranty;
+        this.sn = sn;
     }
-    atribut(){
-        console.log(`Varian : ${this.varian} \n sn : ${this.sn} \n door : ${this.door} \n seat : ${this.seat} seater \n tyre : ${this.brand} ${this.size} inch \n waranty : ${this.warranty} year`);
+    serial() {
+        let characters = '1234567890abcdefghijklmnopqrstuABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let charsCount = 12;
+        let randomSerial1 = '';
+        let randomSerial2 = '';
+        let randomSerial3 = '';
+        let randomSerial4 = '';
+        let randomSerial5 = '';
+
+        for (let i = 0; i < charsCount; i++) {
+            randomSerial1 += characters[Math.floor(Math.random() * characters.length)];
+        }
+        
+        for (let i = 0; i < charsCount; i++) {
+            randomSerial2 += characters[Math.floor(Math.random() * characters.length)];
+        }
+
+        for (let i = 0; i < charsCount; i++) {
+            randomSerial3 += characters[Math.floor(Math.random() * characters.length)];
+        }
+        
+        for (let i = 0; i < charsCount; i++) {
+            randomSerial4 += characters[Math.floor(Math.random() * characters.length)];
+        }
+
+        for (let i = 0; i < charsCount; i++) {
+            randomSerial5 += characters[Math.floor(Math.random() * characters.length)];
+        }
+
+        console.log(`${randomSerial1.substring(0,8)} - ${randomSerial2.substring(0,4)} - ${randomSerial3.substring(0,4)} - ${randomSerial4.substring(0,4)} - ${randomSerial5}`);
     }
 }
 
+class Agya extends Car {
+    constructor(){
+        super('Agya', 5, 5, 2022,1)
+        // this.sn = this.serial();
+        this.brand = 'dunlop'
+        this.size = 15;
+    }
+    serial(){
+        super()
+    }
+}
 
-var agya = new Car('Agya', 'sn', 5, 5, 2020,'dunlop',15, 1);
-var rush = new Car('Rush', 'sn', 5, 5, 2020, 'Bridgestone', 17, 3);
-agya.atribut();
-rush.atribut();
+class Rush extends Car {
+    constructor(){
+        super('Rush', 5, 5,2020,2)
+        // this.sn = this.serial()
+        this.brand = 'Bridgestone'
+        this.size = 17;
+    }
+}
 
-
-class CarFactory {
+class CarFactory{
     constructor() {
         this.cars = []
     }
 
-    produce(year) {
-
+    produce(year) { 
+        for (let i = 0; i < Math.random() * 6; i++ ){
+            this.cars.push(new Agya(year));
+            // console.log(this.cars);
+        }
+        for (let i = 0; i < Math.random() * 6; i++ ){
+            this.cars.push(new Rush(year));
+            // console.log(this.cars[i]);
+        }
     }
 
     guaranteeSimulation(simulationYear) {
+        let count = 0;
+        for(let i = 0; i < this.cars.length; i++){
+            if (simulationYear > this.cars[i].year){
+                count++
+                console.log(`\nno. ${count}`);
+                console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${this.cars[i].warranty} year\nSn : ${this.serial}`);
+            }
+
+            // if (this.cars[i].year + this.cars[i].warranty == simulationYear){
+            //     count++
+            //     console.log(`\nno. ${count}`);
+            //     console.log(`Varian : ${this.cars[i].varian}\nDorr : ${this.cars[i].door}\nSeat : ${this.cars[i].seat} seater\nTyre : ${this.cars[i].brand} ${this.cars[i].size} inch\nYear : ${this.cars[i].year}\nWarranty : ${this.cars[i].warranty} year`);
+            // }
+            // else{
+            //     console.log('kurang beruntung');
+            // }
+        }
 
     }
 
 }
 
 const toyota = new CarFactory()
-// toyota.produce(2020)
-// toyota.produce(2022)
+toyota.produce(2020)
+toyota.produce(2022)
 // toyota.result()
-// toyota.guaranteeSimulation(2025)
+toyota.guaranteeSimulation(2025)
