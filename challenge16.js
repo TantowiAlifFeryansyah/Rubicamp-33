@@ -72,7 +72,7 @@ class Car extends Tyre{
 class Agya extends Car {
     constructor(){
         super('Agya', 5, 5, 2022)
-        this.sn = this.serial();
+        // this.sn = this.serial();
         this.brand = 'dunlop'
         this.size = 15;
     }
@@ -82,7 +82,7 @@ class Agya extends Car {
 class Rush extends Car {
     constructor(){
         super('Rush', 5, 5,2020)
-        this.sn = this.serial()
+        // this.sn = this.serial()
         this.brand = 'Bridgestone'
         this.size = 17;
     }
@@ -96,7 +96,7 @@ class CarFactory{
     produce(year) { 
         for (let i = 0; i < Math.random() * 6; i++ ){
             this.cars.push(new Agya(year));
-            console.log(this.cars);
+            // console.log(this.cars);
         }
         for (let i = 0; i < Math.random() * 6; i++ ){
             this.cars.push(new Rush(year));
