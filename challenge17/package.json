@@ -1,0 +1,16 @@
+{
+  "name": "challenge17",
+  "version": "1.0.0",
+  "description": "import export challenge17",
+  "main": "calculator.js",
+  "type":"module",
+  "scripts": {
+    "test": "node run.js"
+  },
+  "keywords": [
+    "import",
+    "export"
+  ],
+  "author": "tantowi alif",
+  "license": "ISC"
+}
