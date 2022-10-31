@@ -19,7 +19,6 @@ method chaining, class, import, export, ES6
 */
 
 export const PI = 22 / 7
-const r = 7
 
 export default class Calculator {
     constructor() {
@@ -49,9 +48,12 @@ export default class Calculator {
     }
 
     square(value){
-        this.number = Math.pow(r, 2)
+        this.number = Math.pow(this.number, 2)
         return this;
     }
+
+    // calc.square().multiply(PI).result() // luas lingkaran dengan jari jari 7 => PI x r pangkat 2 = 154
+
 
     exponent(value){
         this.number = Math.pow(this.number, value)
