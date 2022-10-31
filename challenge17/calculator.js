@@ -48,12 +48,13 @@ export default class Calculator {
     }
 
     square(value){
-        this.number = 7 ** 2;
+        this.number = Math.pow(7, 2)
+
         return this;
     }
 
     exponent(value){
-        this.number = this.number ** value;
+        this.number = Math.pow(this.number, value)
         return this;
     }
 
