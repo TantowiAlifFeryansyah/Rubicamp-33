@@ -1,66 +1,99 @@
-/*
-buatlah sebuah permainan tebak tebakan, gunakan file data.json untuk menyimpan daftar pertanyaan dan jawaban. file data.json sudah disertakan di github. ikuti aturan di bawah ini.
-*/
-
-if(process.argv.length<=2){
-  console.log(`belum lengkap cuy coba lagi`)
-}
-else if (process.argv.length > 2){
-
-
-
-const fs = require('fs')
-const data = fs.readFileSync('data.json', 'utf8')
-const convert = JSON.parse(data)
-console.log("Selamat datang di permainan Tebak-tebakan. kamu akan diberikan pertanyaan dari file ini 'data.json'.\nUntuk bermain, jawablah dengan jawaban yang sesuai.\nGunakan 'skip' untuk menangguhkan pertanyaanya, dan di akhir pertanyaan akan ditanyakan lagi. \n")
-
-const readline = require('node:readline');
-const rl = readline.createInterface({
-
-
-  input: process.stdin,
-  output: process.stdout,
-  prompt: `Jawaban: `
-});
-
-let wrong = 1;
-let penambah = 0;
-console.log(`Pertanyaan: ${convert[penambah].definition}`)
-
-rl.prompt();
-
-rl.on('line', (ketikan) => {
-
-  if (ketikan.toLowerCase() == convert[penambah].term) {
-    console.log(`\nAnda Beruntung! \n`);
-    penambah++;
-    wrong = 1;
-
-    if (penambah == convert.length) {
-      console.log('Anda Berhasil!');
-      rl.close() // untuk memanggil close (menutup running)
+class Tyre {
+    constructor(size, brandtype) {
+        this.size = size;
+        this.brand = brandtype;
     }
-    else {
-      console.log(`Pertanyaan: ${convert[penambah].definition}`);
-    }
-  }
-  else if (ketikan.toLowerCase() == 'skip') {
-    convert.push(convert[penambah])
-    penambah++
-    console.log(`\nPertanyaan: ${convert[penambah].definition}`);
-  }
-  else {
-    console.log(`\nAnda Kurang Beruntung! anda telah salah ${wrong} kali, silahkan coba lagi.`);
-    wrong++;
-  }
-  rl.prompt();
-}).on('close', () => {
-  process.exit(0);
-});
 
 }
 
-/*
-KEYWORD
-process.argv, readline, array
-*/
+class Car {
+    constructor(model, pembuatan, pintu, ban, bangku, year, warranty, tyre) {
+        this.model = model;
+        this.pembuatan = pembuatan;
+        this.pintu = pintu;
+        this.ban = ban;
+        this.bangku = bangku;
+        this.year = year;
+        this.warranty = warranty;
+        this.tyre = tyre;
+    }
+}
+
+class Agya extends Car {
+    constructor() {
+        super("agya", 2019, 4, 4, 4, 2020, 3, new Tyre(4, "Accelera"))
+    }
+}
+
+class Rush extends Car {
+    constructor() {
+        super("Rush", 2020, 4, 4, 6, 2021, 6, new Tyre(4, "Achilles"))
+    }
+}
+
+class CarFactory {
+    constructor(tipe1, tipe2) {
+        this.tipe1 = tipe1;
+        this.tipe2 = tipe2;
+        this.cars = [];
+    }
+    produksi(year) {
+        let getAgya = 0;
+        for (let i = 0; i < Math.random() * 10; i++) {
+            this.cars.push(new Agya(year))
+            getAgya++
+        }
+        let getRush = 0;
+        for (let i = 0; i < Math.random() * 10; i++) {
+            this.cars.push(new Rush(year))
+            getRush++
+        }
+        console.log(`pada tahun ${year}, perusahaa TOYOTA ${this.tipe1} memproduksi ${getAgya} mobil, sedangkan tipe ${this.tipe2} memproduksi sebanyak ${getRush} mobil`)
+    }
+
+    garansi(year) {
+        let count = 0;
+        let y = year;
+        console.log(`===TOYOTA===`)
+        for (let i = 0; i < this.cars.length; i++) {
+            if (year > (this.cars[i].pembuatan + this.cars[i].warranty)) {
+                count++
+                console.log(`no ${count}`)
+                console.log(`Memiliki Ban ${this.cars[i].ban} bertipe ${this.cars[i].tyre.size} ${this.cars[i].tyre.brand} dan kursi sebanyak ${this.cars[i].bangku}`)
+                console.log(`Tipe ${this.cars[i].model} Tahun Pembuatan ${this.cars[i].pembuatan} tahun,warranty sudah tidak AKTIF karena sudah melawati ${y}`)
+                console.log("============================================================")
+            } else {
+                count++
+                console.log()
+                console.log(`no ${count}`)
+                console.log(`Memiliki Ban ${this.cars[i].ban} bertipe ${this.cars[i].tyre.size} ${this.cars[i].tyre.brand} dan kursi sebanyak ${this.cars[i].bangku}`)
+                console.log(`Tipe ${this.cars[i].model} Tahun Pembuatan ${this.cars[i].pembuatan} tahun,warranty masi Berlaku sampai ${y}`)
+            }
+
+        }
+
+    }
+}
+let Toyota = new CarFactory('Agya', 'Rust');
+Toyota.produksi(2020);
+Toyota.garansi(2025)
+
+
+
+
+
+
+
+
+// let characters = '1234567890abcdefghijklmnopqrstuABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
+// let charsCount = 8;
+// let randomSerial = '';
+
+// for (let i = 0; i < charsCount; i++) {
+//     randomSerial += characters[Math.floor(Math.random() * characters.length)];
+
+// }
+// let total = []
+// total.push(randomSerial)
+// console.log(total);
+// console.log(randomSerial);
