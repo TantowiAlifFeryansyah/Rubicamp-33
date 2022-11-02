@@ -6,7 +6,7 @@ const pathDB = path.join(path.resolve(), 'db', 'university.db');
 const db = new sqlite3.Database(path.join(pathDB));
 
 export function read(callback) {
-    db.all('SELECT * FROM Mahasiswa', (err, rows) => {
+    db.all('SELECT * FROM Jurusan', (err, rows) => {
         if (err) return console.log('gagal ambil data', err)
         callback(rows)
     });
