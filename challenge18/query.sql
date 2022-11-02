@@ -13,5 +13,8 @@ INSERT INTO Mahasiswa(NIM, Nama, 'Tanggal Lahir', Alamat, 'Kode Jurusan', 'Nama 
 
 INSERT INTO Jurusan('Kode Jurusan', 'Nama Jurusan') VALUES ('J001','Fabrikasi Logam'), ('J002','Listrik tenaga'), ('J003','Elektronika'), ('J004','Mekatronika'), ('J005','Otomotif'), ('J006','Informatika');
 
-
 INSERT INTO Kontrak (NIM, Nama, 'Mata Kuliah', Dosen, Nilai) VALUES ('2022070001', 'Tantowi', 'data mining', 'Rubi', 'C'), ('2022070002', 'Yaqin', 'data mining', 'Rubi', 'A+'), ('2022070003', 'Fajar', 'matematika', 'Hilmi', 'B'), ('2022070004', 'Bagas', 'basic', 'Wildan', 'B+'), ('2022070005', 'Ferry', 'kerja bengkel', 'Bambang', 'A'), ('2022070006', 'Faras', 'matematika', 'Hilmi', 'A++');
+
+INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', SKS) VALUES ('MK01', 'data mining', 20), ('MK02', 'basic', 20), ('MK03', 'kerja bengkel', 20), ('MK04', 'matematika', 15); 
+
+INSERT INTO Dosen (NIP, 'Nama Dosen') VALUES ('D2201', 'Rubi'), ('D2202', 'Wildan'), ('D2203', 'Hilmi'), ('D2204', 'Bambang');
