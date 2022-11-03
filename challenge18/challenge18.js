@@ -1,14 +1,12 @@
 import { showMahasiswa } from "./controllers/mahasiswa.js";
-showMahasiswa()
-
+// showMahasiswa()
 import { showKontrak } from "./controllers/kontrak.js";
-showKontrak()
-
+// showKontrak()
 import { showJurusan } from "./controllers/jurusan.js";
-showJurusan()
-
+// showJurusan()
 import { showDosen } from "./controllers/dosen.js";
-showDosen()
-
+// showDosen()
 import { showMatkul } from "./controllers/matkul.js";
-showMatkul()
+// showMatkul()
+
+
