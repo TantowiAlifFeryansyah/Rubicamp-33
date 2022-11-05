@@ -18,3 +18,16 @@ INSERT INTO Kontrak (NIM, Nama, 'Mata Kuliah', Dosen, Nilai) VALUES ('2022070001
 INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', SKS) VALUES ('MK01', 'data mining', 20), ('MK02', 'basic', 20), ('MK03', 'kerja bengkel', 20), ('MK04', 'matematika', 15); 
 
 INSERT INTO Dosen (NIP, 'Nama Dosen') VALUES ('D2201', 'Rubi'), ('D2202', 'Wildan'), ('D2203', 'Hilmi'), ('D2204', 'Bambang');
+
+
+
+INSERT INTO Mahasiswa(NIM, Nama, 'Tanggal Lahir', Alamat, 'Kode Jurusan', 'Nama Jurusan') VALUES ('2022070007', 'Alif', '2003-09-08','Bandung', 'J007', 'DKV'), ('2022070008', 'Feryansyah', '1999-10-01','Bogor', 'J008', 'TKJ');
+
+INSERT INTO Jurusan('Kode Jurusan', 'Nama Jurusan') VALUES ('J007','DKV'), ('J008','TKJ');
+
+INSERT INTO Dosen (NIP, 'Nama Dosen') VALUES ('D2205', 'Emir'), ('D2206', 'Budi'), ('D2207', 'Rafi'), ('D2208', 'Ahmad');
+
+INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', SKS) VALUES ('MK05', 'Bahasa Indonesia', 15), ('MK06', 'Pendidikan Agama', 10), ('MK07', 'Biologi', 20), ('MK08', 'Fisika', 15); 
+
+INSERT INTO Kontrak (NIM, Nama, 'Mata Kuliah', Dosen, Nilai) VALUES ('2022070007', 'Alif', 'Bahasa Indonesia', 'Emir', 'A'), ('2022070008', 'Feryansyah', 'Pendidikan Agama', 'Budi', 'B+');
+
