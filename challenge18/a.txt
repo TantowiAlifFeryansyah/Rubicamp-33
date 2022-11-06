@@ -1,0 +1,1 @@
+SELECT mahasiswa.nim, mahasiswa.nama, mahasiswa.alamat, jurusan.nama FROM mahasiswa JOIN jurusan WHERE mahasiswa.kdjurusan = jurusan.kdjurusan
