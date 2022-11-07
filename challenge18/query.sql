@@ -18,8 +18,8 @@
 
 -- CREATE TABLE Kontrak (ID integer primary key autoincrement, NIM varchar(20) not null, 'Kode Matkul' varchar(4) not null,NIP char(5) not null, Nilai varchar(5), foreign key(NIM) references Mahasiswa(NIM), foreign key('Kode Matkul') references Matkul('Kode Matkul'), foreign key(NIP) references Dosen(NIP));
 
-CREATE TABLE Kontrak (ID integer primary key autoincrement, NIM varchar(20) not null, 'Kode Matkul' varchar(4) not null,NIP char(5) not null, Nilai varchar(5), foreign key(NIM) references Mahasiswa(NIM), foreign key('Kode Matkul') references Matkul('Kode Matkul'), foreign key(NIP) references Dosen(NIP));
-INSERT INTO Kontrak (NIM,'Kode Matkul',NIP, Nilai) VALUES ('2022070001','MK01','D2201' ,'C'), ('2022070002','MK01','D2201', 'A+'),('2022070003','MK04','D2203' ,'B'), ('2022070004','MK02','D2202' ,'B+'),('2022070005','MK03','D2204' ,'A'),('2022070006','MK04','D2203' ,'A++');
+CREATE TABLE Kontrak (ID integer primary key autoincrement, NIM varchar(20) not null, 'Kode Matkul' varchar(4) not null,NIP char(5) null, Nilai varchar(5), foreign key(NIM) references Mahasiswa(NIM), foreign key('Kode Matkul') references Matkul('Kode Matkul'), foreign key(NIP) references Dosen(NIP));
+INSERT INTO Kontrak (NIM,'Kode Matkul',NIP, Nilai) VALUES ('2022070001','MK01','D2201' ,'C'), ('2022070002','MK01','D2201', 'A+'),('2022070003','MK04','D2203' ,'B'), ('2022070004','MK02','D2202' ,'B+'),('2022070005','MK03','D2204' ,'A'),('2022070006','MK04','D2203' ,'A++'),('2022070001','MK04','D2203' ,'A+');
 SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP;
 
 
@@ -40,4 +40,6 @@ SELECT CobaKontrak.ID, CobaKontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul', Do
 
 `SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP GROUP BY Kontrak.ID, Kontrak.NIM, Kontrak.'Kode Matkul', Kontrak.NIP, Kontrak.Nilai HAVING Kontrak.NIM = 202270001`
 
-Select * from Kontrak where NIM = 2022070001;
+
+
+UPDATE Kontrak SET Nilai = 'C' WHERE ID = 1

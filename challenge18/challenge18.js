@@ -591,42 +591,36 @@ function daftarKontrak() {
 function cariKontrak() {
     rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
         const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
-        db.get(sql, [ketikan], (err, row) => {
+        db.all(sql, [ketikan], (err, row) => {
             if (err) return console.log('gagal ambil data', err);
-            if (row) {
-                var kontrak = new Table({
-                    head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Nilai']
-                    , colWidths: [5, 15, 15, 10, 7]
-                });
+            var kontrak = new Table({
+                head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Nilai']
+                , colWidths: [5, 15, 15, 10, 7]
+            });
+            row.forEach((item, index) => {
                 kontrak.push(
-                    [row.ID, row.NIM, row['Kode Matkul'], row.NIP, row.Nilai])
-
-                console.log(kontrak.toString());
-                menuKontrak()
-            }
-            else {
-                console.log(`Mahasiswa dengan NIM ${ketikan} tidak terdaftar`);
-                console.log(`==============================================================================================`);
-                menuKontrak()
-            }
+                    [item.ID, item.NIM, item['Kode Matkul'], item.NIP, item.Nilai])
+            })
+            console.log(kontrak.toString());
+            menuKontrak()
         })
     })
 }
 
 function tambahKontrak() {
     console.log(`Lengkapi data di bawah ini :`);
-    db.all('SELECT * FROM Kontrak', (err, rows) => {
+    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
         if (err) return console.log('gagal ambil data', err);
         var kontrak = new Table({
             head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-            , colWidths: [5, 15, 15, 15, 15, 7]
+            , colWidths: [5, 15, 15, 20, 15, 7]
         });
         rows.forEach((item, index) => {
             kontrak.push(
                 [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
         })
         console.log(kontrak.toString());
-        rl.question(`Masukan NIM : `, (ketikan) => {
+        rl.question(`Kode NIM : `, (ketikan) => {
             db.all('SELECT * FROM Matkul', (err, rows) => {
                 if (err) return console.log('gagal ambil data', err);
                 var matkul = new Table({
@@ -651,12 +645,26 @@ function tambahKontrak() {
                         })
                         console.log(dosen.toString());
                         rl.question(`Masukan NIP Dosen : `, (ketikan3) => {
-                            const sql = (`INSERT INTO Kontrak (NIM, Nama, 'Mata Kuliah', Dosen) VALUES (?,?,?,?)`)
-                            db.run(sql, [ketikan, ketikan2, ketikan3], (err) => {
-                                if (err) return console.log('gagal ambil data', err);
-                                console.log(`Kontrak telah ditambahkan`);
-                                console.log(`==============================================================================================`)
-                                menuMatkul()
+                            rl.question(`Masukan Nilai : `, (ketikan4) => {
+                                const sql = (`INSERT INTO Kontrak ('NIM', 'Kode Matkul', 'NIP','NILAI') VALUES (?,?,?,?)`)
+                                db.run(sql, [ketikan, ketikan2, ketikan3, ketikan4], (err) => {
+                                    if (err) return console.log('gagal ambil data', err);
+                                    console.log(`Kontrak telah ditambahkan`);
+                                    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+                                        if (err) return console.log('gagal ambil data', err);
+                                        var kontrak = new Table({
+                                            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                                            , colWidths: [5, 15, 15, 20, 15, 7]
+                                        });
+                                        rows.forEach((item, index) => {
+                                            kontrak.push(
+                                                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+                                        })
+                                        console.log(kontrak.toString());
+                                        console.log(`==============================================================================================`)
+                                        menuKontrak()
+                                    })
+                                })
                             })
                         })
                     })
@@ -671,9 +679,69 @@ function hapusKontrak() {
         const sql = (`DELETE FROM Kontrak WHERE ID = ?`);
         db.run(sql, [ketikan], (err) => {
             if (err) return console.log('gagal ambil data', err);
-            console.log(`Data Kontrak dengan ID ${ketikan}, telah dihapus`);
+            console.log(`Data Kontrak engan ID ${ketikan}, telah dihapus`);
             console.log(`==============================================================================================`);
             menuKontrak()
+        })
+    })
+}
+
+function updateKontrak() {
+    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+        if (err) return console.log('gagal ambil data', err);
+        var kontrak = new Table({
+            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+            , colWidths: [5, 15, 15, 20, 15, 7]
+        });
+        rows.forEach((item, index) => {
+            kontrak.push(
+                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+        })
+        console.log(kontrak.toString());
+        rl.question(`Masukan nim Mahasiswa : `, (ketikan) => {
+            const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
+            db.all(sql, [ketikan], (err, row) => {
+                if (err) return console.log('gagal ambil data', err);
+                var kontrak = new Table({
+                    head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Nilai']
+                    , colWidths: [5, 15, 15, 10, 7]
+                });
+                row.forEach((item, index) => {
+                    kontrak.push(
+                        [item.ID, item.NIM, item['Kode Matkul'], item.NIP, item.Nilai])
+                })
+                console.log(`==============================================================================================`)
+                console.log(`Detail Mahasiswa dengan NIM '${ketikan}' :`);
+                console.log(kontrak.toString());
+
+                rl.question(`Masukan ID yang akan dirubah nilainya : `, (ketikan2) => {
+                    console.log(`==============================================================================================`)
+
+                    rl.question(`tulis nilai yang baru : `, (ketikan3) => {
+                        console.log(`==============================================================================================`)
+
+                        const sql = (`UPDATE Kontrak SET Nilai = ? WHERE ID = ?`)
+                        db.run(sql, [ketikan3, ketikan2], (err) => {
+                            if (err) return console.log('gagal ambil data', err);
+                            console.log(`Nilai telah di update`);
+                            db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+                                if (err) return console.log('gagal ambil data', err);
+                                var kontrak = new Table({
+                                    head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                                    , colWidths: [5, 15, 15, 20, 15, 7]
+                                });
+                                rows.forEach((item, index) => {
+                                    kontrak.push(
+                                        [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+                                })
+                                console.log(kontrak.toString());
+                                console.log(`==============================================================================================`)
+                                menuKontrak()
+                            })
+                        })
+                    })
+                })
+            })
         })
     })
 }
