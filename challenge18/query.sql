@@ -38,3 +38,6 @@ SELECT CobaKontrak.ID, CobaKontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul', Do
 
 
 
+`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP GROUP BY Kontrak.ID, Kontrak.NIM, Kontrak.'Kode Matkul', Kontrak.NIP, Kontrak.Nilai HAVING Kontrak.NIM = 202270001`
+
+Select * from Kontrak where NIM = 2022070001;

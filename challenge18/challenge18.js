@@ -589,46 +589,26 @@ function daftarKontrak() {
 }
 
 function cariKontrak() {
-    db.all('SELECT * FROM Kontrak', (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var kontrak = new Table({
-            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-            , colWidths: [5, 15, 15, 15, 15, 7]
-        });
-        rows.forEach((item, index) => {
-            kontrak.push(
-                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
-        })
-        console.log(kontrak.toString());
-        rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-            console.log(`==============================================================================================`);
-            const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
-            db.get(sql, [ketikan], (err, row) => {
-                if (err) return console.log('gagal ambil data', err);
-                if (row) {
-                    console.log(`==============================================================================================`);
-                    console.log(`
-                    Daftar Kontrak Mahasiswa dengan NIM ${ketikan} adalah:`);
-                    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Matkul['Kode Matkul'], Dosen.NIP, Kontrak.Nilai FROM Kontrak INNER JOIN Dosen on Dosen['Nama Dosen'] = Kontrak.Dosen  JOIN Matkul WHERE Kontrak.NIM = ${ketikan}`, (err, rows) => {
-                        if (err) return console.log('gagal ambil data', err);
-                        console.log(rows)
-                        // var kontrak = new Table({
-                        //     head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Dosen', 'Nilai']
-                        //     , colWidths: [5, 10, 10, 15, 15, 7]
-                        // });
-                        // rows.forEach((item, index) => {
-                        //     kontrak.push(
-                        //         [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
-                        // })
-                    })
-                    // console.log(kontrak.toString());
-                }
-                else {
-                    console.log(`Mahasiswa dengan NIM ${ketikan} tidak terdaftar`);
-                    console.log(`==============================================================================================`);
-                    menuKontrak()
-                }
-            })
+    rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
+        const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
+        db.get(sql, [ketikan], (err, row) => {
+            if (err) return console.log('gagal ambil data', err);
+            if (row) {
+                var kontrak = new Table({
+                    head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Nilai']
+                    , colWidths: [5, 15, 15, 10, 7]
+                });
+                kontrak.push(
+                    [row.ID, row.NIM, row['Kode Matkul'], row.NIP, row.Nilai])
+
+                console.log(kontrak.toString());
+                menuKontrak()
+            }
+            else {
+                console.log(`Mahasiswa dengan NIM ${ketikan} tidak terdaftar`);
+                console.log(`==============================================================================================`);
+                menuKontrak()
+            }
         })
     })
 }
