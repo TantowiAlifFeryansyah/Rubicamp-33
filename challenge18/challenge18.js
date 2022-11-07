@@ -572,11 +572,11 @@ function menuKontrak() {
 }
 
 function daftarKontrak() {
-    db.all('SELECT * FROM Kontrak', (err, rows) => {
+    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
         if (err) return console.log('gagal ambil data', err);
         var kontrak = new Table({
             head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-            , colWidths: [5, 15, 15, 15, 15, 7]
+            , colWidths: [5, 15, 15, 20, 15, 7]
         });
         rows.forEach((item, index) => {
             kontrak.push(
