@@ -130,7 +130,7 @@ function daftarMahasiswa() {
 
 function cariMahasiswa() {
     rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-        const sql = (`SELECT * FROM Mahasiswa WHERE NIM = ?`)
+        const sql = (`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan' WHERE NIM = ?`)
         db.get(sql, [ketikan], (err, row) => {
             if (err) return console.log('gagal ambil data', err);
             if (row) {
@@ -186,7 +186,7 @@ function tambahMahasiswa() {
                                 const sql = (`INSERT INTO Mahasiswa (NIM, Nama, 'Tanggal Lahir', Alamat, 'Kode Jurusan') VALUES (?,?,?,?,?)`)
                                 db.run(sql, [ketikan, ketikan2, ketikan3, ketikan4, ketikan5], (err) => {
                                     if (err) return console.log('gagal ambil data', err);
-                                    console.log(`Dosen telah ditambahkan`);
+                                    console.log(`Mahasiswa telah ditambahkan`);
                                     db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
                                         if (err) return console.log('gagal ambil data', err);
                                         var mahasiswa = new Table({
@@ -512,10 +512,10 @@ function tambahMataKuliah() {
     rl.question(`Kode Mata Kuliah : `, (ketikan) => {
         rl.question(`Nama Mata Kuliah : `, (ketikan2) => {
             rl.question(`SKS : `, (ketikan3) => {
-                const sql = (`INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', SKS) VALUES (?,?,?)`)
+                const sql = (`INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', 'SKS') VALUES (?,?,?)`)
                 db.run(sql, [ketikan, ketikan2, ketikan3], (err) => {
                     if (err) return console.log('gagal ambil data', err);
-                    console.log(`Dosen telah ditambahkan`);
+                    console.log(`Mata Kuliah telah ditambahkan`);
                     console.log(`==============================================================================================`)
                     menuMatkul()
                 })
