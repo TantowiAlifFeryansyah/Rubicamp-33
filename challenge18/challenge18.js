@@ -34,7 +34,7 @@ rl.question('Username : ', (nama) => {
             console.log(`Welcome, ${nama}. Yout access is level : ADMIN`);
             console.log(`==============================================================================================`)
             console.log('\n');
-            menuUtama();
+            Utama.menuUtama();
         })
     }
 })
@@ -44,162 +44,166 @@ rl.on('close', () => {
     process.exit(0);
 });
 
-function menuUtama() {
-    console.log('silahkan pilih opsi dibawah ini :');
-    console.log('[1] Mahasiswa');
-    console.log('[2] Jurusan');
-    console.log('[3] Dosen');
-    console.log('[4] Mata Kuliah');
-    console.log('[5] Kontrak');
-    console.log('[6] Keluar');
-    console.log(`==============================================================================================`)
-    rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+class Utama {
+    static menuUtama (){
+        console.log('silahkan pilih opsi dibawah ini :');
+        console.log('[1] Mahasiswa');
+        console.log('[2] Jurusan');
+        console.log('[3] Dosen');
+        console.log('[4] Mata Kuliah');
+        console.log('[5] Kontrak');
+        console.log('[6] Keluar');
         console.log(`==============================================================================================`)
-        switch (ketikan) {
-            case '1':
-                menuMahasiswa();
-                break;
-            case '2':
-                menuJurusan()
-                break;
-            case '3':
-                menuDosen()
-                break;
-            case '4':
-                menuMatkul()
-                break;
-            case '5':
-                menuKontrak()
-                break;
-            case '6':
-                rl.close()
-            default:
-                menuUtama()
-        }
-    })
-
-}
-
-function menuMahasiswa() {
-    console.log('silahkan pilih opsi dibawah ini :');
-    console.log('[1] Daftar Mahasiswa');
-    console.log('[2] Cari Mahasiswa');
-    console.log('[3] Tambah Mahasiswa');
-    console.log('[4] Hapus Mahasiswa');
-    console.log('[5] Kembali');
-    console.log(`==============================================================================================`)
-    rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
-        switch (ketikan) {
-            case '1':
-                daftarMahasiswa();
-                break;
-            case '2':
-                cariMahasiswa();
-                break;
-            case '3':
-                tambahMahasiswa();
-                break;
-            case '4':
-                hapusMahasiswa();
-                break;
-            case '5':
-                menuUtama();
-                break;
-            default:
-                menuMahasiswa()
-        }
-    })
-}
-
-function daftarMahasiswa() {
-    db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var mahasiswa = new Table({
-            head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
-            , colWidths: [13, 10, 15, 15, 15, 20]
-        });
-        rows.forEach((item, index) => {
-            mahasiswa.push(
-                [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
+        rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+            console.log(`==============================================================================================`)
+            switch (ketikan) {
+                case '1':
+                    Mahasiswa.menuMahasiswa();;
+                    break;
+                case '2':
+                    Jurusan.menuJurusan()
+                    break;
+                case '3':
+                    Dosen.menuDosen()
+                    break;
+                case '4':
+                    Matkul.menuMatkul()
+                    break;
+                case '5':
+                    Kontrak.menuKontrak()
+                    break;
+                case '6':
+                    rl.close()
+                default:
+                    Utama.menuUtama()
+            }
         })
-        console.log(mahasiswa.toString());
-        console.log(`==============================================================================================`)
-        menuMahasiswa()
-    })
+    }
+    
 }
 
-function cariMahasiswa() {
-    rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-        const sql = (`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan' WHERE NIM = ?`)
-        db.get(sql, [ketikan], (err, row) => {
+class Mahasiswa {
+    static menuMahasiswa() {
+        console.log('silahkan pilih opsi dibawah ini :');
+        console.log('[1] Daftar Mahasiswa');
+        console.log('[2] Cari Mahasiswa');
+        console.log('[3] Tambah Mahasiswa');
+        console.log('[4] Hapus Mahasiswa');
+        console.log('[5] Kembali');
+        console.log(`==============================================================================================`)
+        rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+            switch (ketikan) {
+                case '1':
+                    Mahasiswa.daftarMahasiswa();
+                    break;
+                case '2':
+                    Mahasiswa.cariMahasiswa();
+                    break;
+                case '3':
+                    Mahasiswa.tambahMahasiswa();
+                    break;
+                case '4':
+                    Mahasiswa.hapusMahasiswa();
+                    break;
+                case '5':
+                    Utama.menuUtama();
+                    break;
+                default:
+                    Mahasiswa.menuMahasiswa();
+            }
+        })
+    }
+
+    static daftarMahasiswa() {
+        db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            if (row) {
-                console.log(`==============================================================================================`);
-                console.log(`
-                    Detail Mahasiswa dengan NIM ${ketikan} :
-                    NIM     : ${row.NIM}
-                    Nama    : ${row.Nama}
-                    Alamat  : ${row.Alamat}
-                    Jurusan : ${row['Nama Jurusan']}
-                    `);
-                console.log(`==============================================================================================`);
-                menuMahasiswa()
-            }
-            else {
-                console.log(`Mahasiswa dengan NIM ${ketikan} tidak terdaftar`);
-                console.log(`==============================================================================================`);
-                menuMahasiswa()
-            }
+            var mahasiswa = new Table({
+                head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
+                , colWidths: [13, 10, 15, 15, 15, 20]
+            });
+            rows.forEach((item, index) => {
+                mahasiswa.push(
+                    [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
+            })
+            console.log(mahasiswa.toString());
+            console.log(`==============================================================================================`)
+            Mahasiswa.menuMahasiswa()
         })
-    })
-}
+    }
 
-function tambahMahasiswa() {
-    console.log(`Lengkapi data di bawah ini :`);
-    db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var mahasiswa = new Table({
-            head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
-            , colWidths: [13, 10, 15, 15, 15, 20]
-        });
-        rows.forEach((item, index) => {
-            mahasiswa.push(
-                [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
+    static cariMahasiswa() {
+        rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
+            const sql = (`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan' WHERE NIM = ?`)
+            db.get(sql, [ketikan], (err, row) => {
+                if (err) return console.log('gagal ambil data', err);
+                if (row) {
+                    console.log(`==============================================================================================`);
+                    console.log(`
+                        Detail Mahasiswa dengan NIM ${ketikan} :
+                        NIM     : ${row.NIM}
+                        Nama    : ${row.Nama}
+                        Alamat  : ${row.Alamat}
+                        Jurusan : ${row['Nama Jurusan']}
+                        `);
+                    console.log(`==============================================================================================`);
+                    Mahasiswa.menuMahasiswa()
+                }
+                else {
+                    console.log(`Mahasiswa dengan NIM ${ketikan} tidak terdaftar`);
+                    console.log(`==============================================================================================`);
+                    Mahasiswa.menuMahasiswa()
+                }
+            })
         })
-        console.log(mahasiswa.toString());
-        rl.question(`NIM : `, (ketikan) => {
-            rl.question(`Nama : `, (ketikan2) => {
-                rl.question(`Tanggal Lahir : `, (ketikan3) => {
-                    rl.question(`Alamat : `, (ketikan4) => {
-                        db.all('SELECT * FROM Jurusan', (err, rows) => {
-                            if (err) return console.log('gagal ambil data', err);
-                            var jurusan = new Table({
-                                head: ['Kode Jurusan', 'Nama Jurusan']
-                                , colWidths: [15, 20]
-                            });
-                            rows.forEach((item, index) => {
-                                jurusan.push(
-                                    [item['Kode Jurusan'], item['Nama Jurusan']])
-                            })
-                            console.log(jurusan.toString());
-                            rl.question(`Kode Jurusan : `, (ketikan5) => {
-                                const sql = (`INSERT INTO Mahasiswa (NIM, Nama, 'Tanggal Lahir', Alamat, 'Kode Jurusan') VALUES (?,?,?,?,?)`)
-                                db.run(sql, [ketikan, ketikan2, ketikan3, ketikan4, ketikan5], (err) => {
-                                    if (err) return console.log('gagal ambil data', err);
-                                    console.log(`Mahasiswa telah ditambahkan`);
-                                    db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
+    }
+
+    static tambahMahasiswa() {
+        console.log(`Lengkapi data di bawah ini :`);
+        db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            var mahasiswa = new Table({
+                head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
+                , colWidths: [13, 10, 15, 15, 15, 20]
+            });
+            rows.forEach((item, index) => {
+                mahasiswa.push(
+                    [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
+            })
+            console.log(mahasiswa.toString());
+            rl.question(`NIM : `, (ketikan) => {
+                rl.question(`Nama : `, (ketikan2) => {
+                    rl.question(`Tanggal Lahir : `, (ketikan3) => {
+                        rl.question(`Alamat : `, (ketikan4) => {
+                            db.all('SELECT * FROM Jurusan', (err, rows) => {
+                                if (err) return console.log('gagal ambil data', err);
+                                var jurusan = new Table({
+                                    head: ['Kode Jurusan', 'Nama Jurusan']
+                                    , colWidths: [15, 20]
+                                });
+                                rows.forEach((item, index) => {
+                                    jurusan.push(
+                                        [item['Kode Jurusan'], item['Nama Jurusan']])
+                                })
+                                console.log(jurusan.toString());
+                                rl.question(`Kode Jurusan : `, (ketikan5) => {
+                                    const sql = (`INSERT INTO Mahasiswa (NIM, Nama, 'Tanggal Lahir', Alamat, 'Kode Jurusan') VALUES (?,?,?,?,?)`)
+                                    db.run(sql, [ketikan, ketikan2, ketikan3, ketikan4, ketikan5], (err) => {
                                         if (err) return console.log('gagal ambil data', err);
-                                        var mahasiswa = new Table({
-                                            head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
-                                            , colWidths: [13, 10, 15, 15, 15, 20]
-                                        });
-                                        rows.forEach((item, index) => {
-                                            mahasiswa.push(
-                                                [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
+                                        console.log(`Mahasiswa telah ditambahkan`);
+                                        db.all(`SELECT Mahasiswa.*, Jurusan.'Nama Jurusan' FROM Mahasiswa JOIN Jurusan ON Mahasiswa.'Kode Jurusan' = Jurusan.'Kode Jurusan'`, (err, rows) => {
+                                            if (err) return console.log('gagal ambil data', err);
+                                            var mahasiswa = new Table({
+                                                head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
+                                                , colWidths: [13, 10, 15, 15, 15, 20]
+                                            });
+                                            rows.forEach((item, index) => {
+                                                mahasiswa.push(
+                                                    [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
+                                            })
+                                            console.log(mahasiswa.toString());
+                                            console.log(`==============================================================================================`)
+                                            Mahasiswa.menuMahasiswa()
                                         })
-                                        console.log(mahasiswa.toString());
-                                        console.log(`==============================================================================================`)
-                                        menuMahasiswa()
                                     })
                                 })
                             })
@@ -208,497 +212,394 @@ function tambahMahasiswa() {
                 })
             })
         })
-    })
+    }
+
+    static hapusMahasiswa() {
+        rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
+            const sql = (`DELETE FROM Mahasiswa WHERE NIM = ?`);
+            db.run(sql, [ketikan], (err) => {
+                if (err) return console.log('gagal ambil data', err);
+                console.log(`Detail Mahasiswa ${ketikan}, telah dihapus`);
+                console.log(`==============================================================================================`);
+                Mahasiswa.menuMahasiswa()
+            })
+        })
+    }
 }
 
-function hapusMahasiswa() {
-    rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-        const sql = (`DELETE FROM Mahasiswa WHERE NIM = ?`);
-        db.run(sql, [ketikan], (err) => {
+class Jurusan {
+    static menuJurusan() {
+        console.log('silahkan pilih opsi dibawah ini :');
+        console.log('[1] Daftar Jurusan');
+        console.log('[2] Cari Jurusan');
+        console.log('[3] Tambah Jurusan');
+        console.log('[4] Hapus Jurusan');
+        console.log('[5] Kembali');
+        console.log(`==============================================================================================`)
+        rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+            switch (ketikan) {
+                case '1':
+                    Jurusan.daftarJurusan();
+                    break;
+                case '2':
+                    Jurusan.cariJurusan()
+                    break;
+                case '3':
+                    Jurusan.tambahJurusan()
+                    break;
+                case '4':
+                    Jurusan.hapusJurusan()
+                    break;
+                case '5':
+                    Utama.menuUtama()
+                    break;
+                default:
+                    Jurusan.menuJurusan()
+            }
+        })
+    }
+
+    static daftarJurusan() {
+        db.all('SELECT * FROM Jurusan', (err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            console.log(`Detail Mahasiswa ${ketikan}, telah dihapus`);
+            var jurusan = new Table({
+                head: ['Kode Jurusan', 'Nama Jurusan']
+                , colWidths: [15, 20]
+            });
+            rows.forEach((item, index) => {
+                jurusan.push(
+                    [item['Kode Jurusan'], item['Nama Jurusan']])
+            })
+            console.log(jurusan.toString());
             console.log(`==============================================================================================`);
-            menuMahasiswa()
+            Jurusan.menuJurusan()
         })
-    })
-}
+    }
 
-function menuJurusan() {
-    console.log('silahkan pilih opsi dibawah ini :');
-    console.log('[1] Daftar Jurusan');
-    console.log('[2] Cari Jurusan');
-    console.log('[3] Tambah Jurusan');
-    console.log('[4] Hapus Jurusan');
-    console.log('[5] Kembali');
-    console.log(`==============================================================================================`)
-    rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
-        switch (ketikan) {
-            case '1':
-                daftarJurusan();
-                break;
-            case '2':
-                cariJurusan()
-                break;
-            case '3':
-                tambahJurusan()
-                break;
-            case '4':
-                hapusJurusan()
-                break;
-            case '5':
-                menuUtama()
-                break;
-            default:
-                menuJurusan()
-        }
-    })
-}
-
-function daftarJurusan() {
-    db.all('SELECT * FROM Jurusan', (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var jurusan = new Table({
-            head: ['Kode Jurusan', 'Nama Jurusan']
-            , colWidths: [15, 20]
-        });
-        rows.forEach((item, index) => {
-            jurusan.push(
-                [item['Kode Jurusan'], item['Nama Jurusan']])
+    static cariJurusan() {
+        rl.question('Masukan Kode Jurusan : ', (ketikan) => {
+            const sql = (`SELECT * FROM Jurusan WHERE "Kode Jurusan" = ?`)
+            db.get(sql, [ketikan], (err, row) => {
+                if (err) return console.log('gagal ambil data', err);
+                if (row) {
+                    console.log(`==============================================================================================`);
+                    console.log(`
+                        Detail Jurusan dengan Kode ${ketikan} :
+                        Kode Jurusan  : ${row['Kode Jurusan']}
+                        Nama Jurusan  : ${row['Nama Jurusan']}
+                        `);
+                    console.log(`==============================================================================================`);
+                    Jurusan.menuJurusan()
+                }
+                else {
+                    console.log(`Jurusan dengan Kode Jurusan ${ketikan} tidak terdaftar`);
+                    console.log(`==============================================================================================`);
+                    Jurusan.menuJurusan()
+                }
+            })
         })
-        console.log(jurusan.toString());
-        console.log(`==============================================================================================`);
-        menuJurusan()
-    })
-}
+    }
 
-function cariJurusan() {
-    rl.question('Masukan Kode Jurusan : ', (ketikan) => {
-        const sql = (`SELECT * FROM Jurusan WHERE "Kode Jurusan" = ?`)
-        db.get(sql, [ketikan], (err, row) => {
+    static tambahJurusan() {
+        console.log(`Lengkapi data di bawah ini :`);
+        db.all('SELECT * FROM Jurusan', (err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            if (row) {
-                console.log(`==============================================================================================`);
-                console.log(`
-                    Detail Jurusan dengan Kode ${ketikan} :
-                    Kode Jurusan  : ${row['Kode Jurusan']}
-                    Nama Jurusan  : ${row['Nama Jurusan']}
-                    `);
-                console.log(`==============================================================================================`);
-                menuJurusan()
-            }
-            else {
-                console.log(`Jurusan dengan Kode Jurusan ${ketikan} tidak terdaftar`);
-                console.log(`==============================================================================================`);
-                menuJurusan()
-            }
+            var jurusan = new Table({
+                head: ['Kode Jurusan', 'Nama Jurusan']
+                , colWidths: [15, 20]
+            });
+            rows.forEach((item, index) => {
+                jurusan.push(
+                    [item['Kode Jurusan'], item['Nama Jurusan']])
+            })
+            console.log(jurusan.toString());
+            rl.question(`Kode Jurusan : `, (ketikan) => {
+                rl.question(`Nama Jurusan : `, (ketikan2) => {
+                    const sql = (`INSERT INTO Jurusan ("Kode Jurusan", "Nama Jurusan") VALUES (?,?)`)
+                    db.run(sql, [ketikan, ketikan2], (err) => {
+                        if (err) return console.log('gagal ambil data', err);
+                        console.log(`Jurusan telah ditambahkan ke database`);
+                        console.log(`==============================================================================================`)
+                        Jurusan.menuJurusan()
+                    })
+                })
+            })
         })
-    })
+    }
+
+    static hapusJurusan() {
+        rl.question('Masukan Kode Jurusan : ', (ketikan) => {
+            const sql = (`DELETE FROM Jurusan WHERE "Kode Jurusan" = ?`);
+            db.run(sql, [ketikan], (err) => {
+                if (err) return console.log('gagal ambil data', err);
+                console.log(`Data Jurusan ${ketikan}, telah dihapus`);
+                console.log(`==============================================================================================`);
+                Jurusan.menuJurusan()
+            })
+        })
+    }
 }
 
-function tambahJurusan() {
-    console.log(`Lengkapi data di bawah ini :`);
-    db.all('SELECT * FROM Jurusan', (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var jurusan = new Table({
-            head: ['Kode Jurusan', 'Nama Jurusan']
-            , colWidths: [15, 20]
-        });
-        rows.forEach((item, index) => {
-            jurusan.push(
-                [item['Kode Jurusan'], item['Nama Jurusan']])
+class Dosen {
+    static menuDosen() {
+        console.log('silahkan pilih opsi dibawah ini :');
+        console.log('[1] Daftar Dosen');
+        console.log('[2] Cari Dosen');
+        console.log('[3] Tambah Dosen');
+        console.log('[4] Hapus Dosen');
+        console.log('[5] Kembali');
+        console.log(`==============================================================================================`)
+        rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+            switch (ketikan) {
+                case '1':
+                    Dosen.daftarDosen();
+                    break;
+                case '2':
+                    Dosen.cariDosen()
+                    break;
+                case '3':
+                    Dosen.tambahDosen()
+                    break;
+                case '4':
+                    Dosen.hapusDosen()
+                    break;
+                case '5':
+                    Utama.menuUtama()
+                    break;
+                default:
+                    Dosen.menuDosen()
+            }
         })
-        console.log(jurusan.toString());
-        rl.question(`Kode Jurusan : `, (ketikan) => {
-            rl.question(`Nama Jurusan : `, (ketikan2) => {
-                const sql = (`INSERT INTO Jurusan ("Kode Jurusan", "Nama Jurusan") VALUES (?,?)`)
+    }
+
+    static daftarDosen() {
+        db.all('SELECT * FROM Dosen', (err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            var dosen = new Table({
+                head: ['NIP', 'Nama Dosen']
+                , colWidths: [10, 20]
+            });
+            rows.forEach((item, index) => {
+                dosen.push(
+                    [item.NIP, item['Nama Dosen']])
+            })
+            console.log(dosen.toString());
+            console.log(`==============================================================================================`)
+            Dosen.menuDosen()
+        })
+    }
+
+    static cariDosen() {
+        rl.question('Masukan NIP Dosen : ', (ketikan) => {
+            const sql = (`SELECT * FROM Dosen WHERE NIP = ?`)
+            db.get(sql, [ketikan], (err, row) => {
+                if (err) return console.log('gagal ambil data', err);
+                if (row) {
+                    console.log(`==============================================================================================`);
+                    console.log(`
+                        Detail Dosen dengan NIP ${ketikan} :
+                        NIP         : ${row.NIP}
+                        Nama Dosen  : ${row['Nama Dosen']}
+                        `);
+                    console.log(`==============================================================================================`);
+                    Dosen.menuDosen()
+                }
+                else {
+                    console.log(`Dosen dengan NIP ${ketikan} tidak terdaftar`);
+                    console.log(`==============================================================================================`);
+                    Dosen.menuDosen()
+                }
+            })
+        })
+    }
+
+    static tambahDosen() {
+        console.log(`Lengkapi data di bawah ini :`);
+        rl.question(`Masukan NIP : `, (ketikan) => {
+            rl.question(`Nama Dosen : `, (ketikan2) => {
+                const sql = (`INSERT INTO Dosen (NIP, 'Nama Dosen') VALUES (?,?)`)
                 db.run(sql, [ketikan, ketikan2], (err) => {
                     if (err) return console.log('gagal ambil data', err);
-                    console.log(`Jurusan telah ditambahkan ke database`);
+                    console.log(`Dosen telah ditambahkan`);
                     console.log(`==============================================================================================`)
-                    menuJurusan()
+                    Dosen.menuDosen()
                 })
             })
         })
-    })
-}
+    }
 
-function hapusJurusan() {
-    rl.question('Masukan Kode Jurusan : ', (ketikan) => {
-        const sql = (`DELETE FROM Jurusan WHERE "Kode Jurusan" = ?`);
-        db.run(sql, [ketikan], (err) => {
-            if (err) return console.log('gagal ambil data', err);
-            console.log(`Data Jurusan ${ketikan}, telah dihapus`);
-            console.log(`==============================================================================================`);
-            menuJurusan()
-        })
-    })
-}
-
-function menuDosen() {
-    console.log('silahkan pilih opsi dibawah ini :');
-    console.log('[1] Daftar Dosen');
-    console.log('[2] Cari Dosen');
-    console.log('[3] Tambah Dosen');
-    console.log('[4] Hapus Dosen');
-    console.log('[5] Kembali');
-    console.log(`==============================================================================================`)
-    rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
-        switch (ketikan) {
-            case '1':
-                daftarDosen();
-                break;
-            case '2':
-                cariDosen()
-                break;
-            case '3':
-                tambahDosen()
-                break;
-            case '4':
-                hapusDosen()
-                break;
-            case '5':
-                menuUtama()
-                break;
-            default:
-                menuDosen()
-        }
-    })
-}
-
-function daftarDosen() {
-    db.all('SELECT * FROM Dosen', (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var dosen = new Table({
-            head: ['NIP', 'Nama Dosen']
-            , colWidths: [10, 20]
-        });
-        rows.forEach((item, index) => {
-            dosen.push(
-                [item.NIP, item['Nama Dosen']])
-        })
-        console.log(dosen.toString());
-        console.log(`==============================================================================================`)
-        menuDosen()
-    })
-}
-
-function cariDosen() {
-    rl.question('Masukan NIP Dosen : ', (ketikan) => {
-        const sql = (`SELECT * FROM Dosen WHERE NIP = ?`)
-        db.get(sql, [ketikan], (err, row) => {
-            if (err) return console.log('gagal ambil data', err);
-            if (row) {
-                console.log(`==============================================================================================`);
-                console.log(`
-                    Detail Dosen dengan NIP ${ketikan} :
-                    NIP         : ${row.NIP}
-                    Nama Dosen  : ${row['Nama Dosen']}
-                    `);
-                console.log(`==============================================================================================`);
-                menuDosen()
-            }
-            else {
-                console.log(`Dosen dengan NIP ${ketikan} tidak terdaftar`);
-                console.log(`==============================================================================================`);
-                menuDosen()
-            }
-        })
-    })
-}
-
-function tambahDosen() {
-    console.log(`Lengkapi data di bawah ini :`);
-    rl.question(`Masukan NIP : `, (ketikan) => {
-        rl.question(`Nama Dosen : `, (ketikan2) => {
-            const sql = (`INSERT INTO Dosen (NIP, 'Nama Dosen') VALUES (?,?)`)
-            db.run(sql, [ketikan, ketikan2], (err) => {
+    static hapusDosen() {
+        rl.question('Masukan Kode NIP Dosen : ', (ketikan) => {
+            const sql = (`DELETE FROM Dosen WHERE NIP = ?`);
+            db.run(sql, [ketikan], (err) => {
                 if (err) return console.log('gagal ambil data', err);
-                console.log(`Dosen telah ditambahkan`);
-                console.log(`==============================================================================================`)
-                menuDosen()
+                console.log(`Detail Dosen ${ketikan}, telah dihapus`);
+                console.log(`==============================================================================================`);
+                Dosen.menuDosen()
             })
         })
-    })
+    }
 }
 
-function hapusDosen() {
-    rl.question('Masukan Kode NIP Dosen : ', (ketikan) => {
-        const sql = (`DELETE FROM Dosen WHERE NIP = ?`);
-        db.run(sql, [ketikan], (err) => {
-            if (err) return console.log('gagal ambil data', err);
-            console.log(`Detail Dosen ${ketikan}, telah dihapus`);
-            console.log(`==============================================================================================`);
-            menuDosen()
-        })
-    })
-}
-
-function menuMatkul() {
-    console.log('silahkan pilih opsi dibawah ini :');
-    console.log('[1] Daftar Mata Kuliah');
-    console.log('[2] Cari Mata Kuliah');
-    console.log('[3] Tambah Mata Kuliah');
-    console.log('[4] Hapus Mata Kuliah');
-    console.log('[5] Kembali');
-    console.log(`==============================================================================================`)
-    rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
-        switch (ketikan) {
-            case '1':
-                daftarMatkul();
-                break;
-            case '2':
-                cariMataKuiah()
-                break;
-            case '3':
-                tambahMataKuliah()
-                break;
-            case '4':
-                hapusMataKuliah()
-                break;
-            case '5':
-                menuUtama()
-                break;
-            default:
-                menuMatkul()
-        }
-    })
-}
-
-function daftarMatkul() {
-    db.all('SELECT * FROM Matkul', (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var matkul = new Table({
-            head: ['Kode Matkul', 'Nama Matkul', 'SKS']
-            , colWidths: [15, 20, 5]
-        });
-        // table is an Array, so you can `push`, `unshift`, `splice` and friends
-        rows.forEach((item, index) => {
-            matkul.push(
-                [item['Kode Matkul'], item['Nama Matkul'], item.SKS])
-        })
-        console.log(matkul.toString());
+class Matkul {
+    static menuMatkul() {
+        console.log('silahkan pilih opsi dibawah ini :');
+        console.log('[1] Daftar Mata Kuliah');
+        console.log('[2] Cari Mata Kuliah');
+        console.log('[3] Tambah Mata Kuliah');
+        console.log('[4] Hapus Mata Kuliah');
+        console.log('[5] Kembali');
         console.log(`==============================================================================================`)
-        menuMatkul()
-    })
-}
-
-function cariMataKuiah() {
-    rl.question('Masukan Kode Mata Kuliah : ', (ketikan) => {
-        const sql = (`SELECT * FROM Matkul WHERE "Kode Matkul" = ?`)
-        db.get(sql, [ketikan], (err, row) => {
-            if (err) return console.log('gagal ambil data', err);
-            if (row) {
-                console.log(`==============================================================================================`);
-                console.log(`
-                    Detail Jurusan dengan Kode ${ketikan} :
-                    Kode Mata Kuliah  : ${row['Kode Matkul']}
-                    Nama Mata Kuliah  : ${row['Nama Matkul']}
-                    SKS               : ${row.SKS}
-                    `);
-                console.log(`==============================================================================================`);
-                menuMatkul()
-            }
-            else {
-                console.log(`Mata Kuliah dengan Kode ${ketikan} tidak terdaftar`);
-                console.log(`==============================================================================================`);
-                menuMatkul()
+        rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+            switch (ketikan) {
+                case '1':
+                    Matkul.daftarMatkul();
+                    break;
+                case '2':
+                    Matkul.cariMataKuiah()
+                    break;
+                case '3':
+                    Matkul.tambahMataKuliah()
+                    break;
+                case '4':
+                    Matkul.hapusMataKuliah()
+                    break;
+                case '5':
+                    Utama.menuUtama()
+                    break;
+                default:
+                    Matkul.menuMatkul()
             }
         })
-    })
-}
+    }
 
-function tambahMataKuliah() {
-    console.log(`Lengkapi data di bawah ini :`);
-    rl.question(`Kode Mata Kuliah : `, (ketikan) => {
-        rl.question(`Nama Mata Kuliah : `, (ketikan2) => {
-            rl.question(`SKS : `, (ketikan3) => {
-                const sql = (`INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', 'SKS') VALUES (?,?,?)`)
-                db.run(sql, [ketikan, ketikan2, ketikan3], (err) => {
-                    if (err) return console.log('gagal ambil data', err);
-                    console.log(`Mata Kuliah telah ditambahkan`);
-                    console.log(`==============================================================================================`)
-                    menuMatkul()
-                })
-            })
-        })
-    })
-}
-
-function hapusMataKuliah() {
-    rl.question('Masukan Kode Mata Kuliah : ', (ketikan) => {
-        const sql = (`DELETE FROM Matkul WHERE "Kode Matkul" = ?`);
-        db.run(sql, [ketikan], (err) => {
+    static daftarMatkul() {
+        db.all('SELECT * FROM Matkul', (err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            console.log(`Data Mata Kuliah ${ketikan}, telah dihapus`);
-            console.log(`==============================================================================================`);
-            menuMatkul()
-        })
-    })
-}
-
-function menuKontrak() {
-    console.log('silahkan pilih opsi dibawah ini :');
-    console.log('[1] Daftar Kontrak');
-    console.log('[2] Cari Kontrak');
-    console.log('[3] Tambah Kontrak');
-    console.log('[4] Hapus Kontrak');
-    console.log('[5] Update Nilai');
-    console.log('[6] Kembali');
-    console.log(`==============================================================================================`)
-    rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
-        switch (ketikan) {
-            case '1':
-                daftarKontrak();
-                break;
-            case '2':
-                cariKontrak()
-                break;
-            case '3':
-                tambahKontrak()
-                break;
-            case '4':
-                hapusKontrak()
-                break;
-            case '5':
-                updateKontrak()
-                break;
-            case '6':
-                menuUtama()
-                break;
-            default:
-                menuKontrak()
-        }
-    })
-}
-
-function daftarKontrak() {
-    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var kontrak = new Table({
-            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-            , colWidths: [5, 15, 15, 20, 15, 7]
-        });
-        rows.forEach((item, index) => {
-            kontrak.push(
-                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
-        })
-        console.log(kontrak.toString());
-        console.log(`==============================================================================================`)
-        menuKontrak()
-    })
-}
-
-function cariKontrak() {
-    rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-        const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
-        db.all(sql, [ketikan], (err, row) => {
-            if (err) return console.log('gagal ambil data', err);
-            var kontrak = new Table({
-                head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Nilai']
-                , colWidths: [5, 15, 15, 10, 7]
+            var matkul = new Table({
+                head: ['Kode Matkul', 'Nama Matkul', 'SKS']
+                , colWidths: [15, 20, 5]
             });
-            row.forEach((item, index) => {
-                kontrak.push(
-                    [item.ID, item.NIM, item['Kode Matkul'], item.NIP, item.Nilai])
+            rows.forEach((item, index) => {
+                matkul.push(
+                    [item['Kode Matkul'], item['Nama Matkul'], item.SKS])
             })
-            console.log(kontrak.toString());
-            menuKontrak()
+            console.log(matkul.toString());
+            console.log(`==============================================================================================`)
+            Matkul.menuMatkul()
         })
-    })
-}
+    }
 
-function tambahKontrak() {
-    console.log(`Lengkapi data di bawah ini :`);
-    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var kontrak = new Table({
-            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-            , colWidths: [5, 15, 15, 20, 15, 7]
-        });
-        rows.forEach((item, index) => {
-            kontrak.push(
-                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
-        })
-        console.log(kontrak.toString());
-        rl.question(`Kode NIM : `, (ketikan) => {
-            db.all('SELECT * FROM Matkul', (err, rows) => {
+    static cariMataKuiah() {
+        rl.question('Masukan Kode Mata Kuliah : ', (ketikan) => {
+            const sql = (`SELECT * FROM Matkul WHERE "Kode Matkul" = ?`)
+            db.get(sql, [ketikan], (err, row) => {
                 if (err) return console.log('gagal ambil data', err);
-                var matkul = new Table({
-                    head: ['Kode Matkul', 'Nama Matkul', 'SKS']
-                    , colWidths: [15, 20, 5]
-                });
-                rows.forEach((item, index) => {
-                    matkul.push(
-                        [item['Kode Matkul'], item['Nama Matkul'], item.SKS])
-                })
-                console.log(matkul.toString());
-                rl.question(`Masukan Kode Mata Kuliah : `, (ketikan2) => {
-                    db.all('SELECT * FROM Dosen', (err, rows) => {
+                if (row) {
+                    console.log(`==============================================================================================`);
+                    console.log(`
+                        Detail Jurusan dengan Kode ${ketikan} :
+                        Kode Mata Kuliah  : ${row['Kode Matkul']}
+                        Nama Mata Kuliah  : ${row['Nama Matkul']}
+                        SKS               : ${row.SKS}
+                        `);
+                    console.log(`==============================================================================================`);
+                    Matkul.menuMatkul()
+                }
+                else {
+                    console.log(`Mata Kuliah dengan Kode ${ketikan} tidak terdaftar`);
+                    console.log(`==============================================================================================`);
+                    Matkul.menuMatkul()
+                }
+            })
+        })
+    }
+
+    static tambahMataKuliah() {
+        console.log(`Lengkapi data di bawah ini :`);
+        rl.question(`Kode Mata Kuliah : `, (ketikan) => {
+            rl.question(`Nama Mata Kuliah : `, (ketikan2) => {
+                rl.question(`SKS : `, (ketikan3) => {
+                    const sql = (`INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', 'SKS') VALUES (?,?,?)`)
+                    db.run(sql, [ketikan, ketikan2, ketikan3], (err) => {
                         if (err) return console.log('gagal ambil data', err);
-                        var dosen = new Table({
-                            head: ['NIP', 'Nama Dosen']
-                            , colWidths: [10, 20]
-                        });
-                        rows.forEach((item, index) => {
-                            dosen.push(
-                                [item.NIP, item['Nama Dosen']])
-                        })
-                        console.log(dosen.toString());
-                        rl.question(`Masukan NIP Dosen : `, (ketikan3) => {
-                            rl.question(`Masukan Nilai : `, (ketikan4) => {
-                                const sql = (`INSERT INTO Kontrak ('NIM', 'Kode Matkul', 'NIP','NILAI') VALUES (?,?,?,?)`)
-                                db.run(sql, [ketikan, ketikan2, ketikan3, ketikan4], (err) => {
-                                    if (err) return console.log('gagal ambil data', err);
-                                    console.log(`Kontrak telah ditambahkan`);
-                                    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
-                                        if (err) return console.log('gagal ambil data', err);
-                                        var kontrak = new Table({
-                                            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-                                            , colWidths: [5, 15, 15, 20, 15, 7]
-                                        });
-                                        rows.forEach((item, index) => {
-                                            kontrak.push(
-                                                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
-                                        })
-                                        console.log(kontrak.toString());
-                                        console.log(`==============================================================================================`)
-                                        menuKontrak()
-                                    })
-                                })
-                            })
-                        })
+                        console.log(`Mata Kuliah telah ditambahkan`);
+                        console.log(`==============================================================================================`)
+                        Matkul.menuMatkul()
                     })
                 })
             })
         })
-    })
+    }
+
+    static hapusMataKuliah() {
+        rl.question('Masukan Kode Mata Kuliah : ', (ketikan) => {
+            const sql = (`DELETE FROM Matkul WHERE "Kode Matkul" = ?`);
+            db.run(sql, [ketikan], (err) => {
+                if (err) return console.log('gagal ambil data', err);
+                console.log(`Data Mata Kuliah ${ketikan}, telah dihapus`);
+                console.log(`==============================================================================================`);
+                Matkul.menuMatkul()
+            })
+        })
+    }
 }
 
-function hapusKontrak() {
-    rl.question('Masukan ID Kontrak : ', (ketikan) => {
-        const sql = (`DELETE FROM Kontrak WHERE ID = ?`);
-        db.run(sql, [ketikan], (err) => {
+class Kontrak {
+    static menuKontrak() {
+        console.log('silahkan pilih opsi dibawah ini :');
+        console.log('[1] Daftar Kontrak');
+        console.log('[2] Cari Kontrak');
+        console.log('[3] Tambah Kontrak');
+        console.log('[4] Hapus Kontrak');
+        console.log('[5] Update Nilai');
+        console.log('[6] Kembali');
+        console.log(`==============================================================================================`)
+        rl.question('Masukan salah satu nomor dari opsi diatas : ', (ketikan) => {
+            switch (ketikan) {
+                case '1':
+                    Kontrak.daftarKontrak();
+                    break;
+                case '2':
+                    Kontrak.cariKontrak()
+                    break;
+                case '3':
+                    Kontrak.tambahKontrak()
+                    break;
+                case '4':
+                    Kontrak.hapusKontrak()
+                    break;
+                case '5':
+                    Kontrak.updateKontrak()
+                    break;
+                case '6':
+                    Utama.menuUtama()
+                    break;
+                default:
+                    Kontrak.menuKontrak()
+            }
+        })
+    }
+
+    static daftarKontrak() {
+        db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            console.log(`Data Kontrak engan ID ${ketikan}, telah dihapus`);
-            console.log(`==============================================================================================`);
-            menuKontrak()
+            var kontrak = new Table({
+                head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                , colWidths: [5, 15, 15, 20, 15, 7]
+            });
+            rows.forEach((item, index) => {
+                kontrak.push(
+                    [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+            })
+            console.log(kontrak.toString());
+            console.log(`==============================================================================================`)
+            Kontrak.menuKontrak()
         })
-    })
-}
+    }
 
-function updateKontrak() {
-    db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
-        if (err) return console.log('gagal ambil data', err);
-        var kontrak = new Table({
-            head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-            , colWidths: [5, 15, 15, 20, 15, 7]
-        });
-        rows.forEach((item, index) => {
-            kontrak.push(
-                [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
-        })
-        console.log(kontrak.toString());
-        rl.question(`Masukan nim Mahasiswa : `, (ketikan) => {
+    static cariKontrak() {
+        rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
             const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
             db.all(sql, [ketikan], (err, row) => {
                 if (err) return console.log('gagal ambil data', err);
@@ -710,38 +611,148 @@ function updateKontrak() {
                     kontrak.push(
                         [item.ID, item.NIM, item['Kode Matkul'], item.NIP, item.Nilai])
                 })
-                console.log(`==============================================================================================`)
-                console.log(`Detail Mahasiswa dengan NIM '${ketikan}' :`);
                 console.log(kontrak.toString());
+                Kontrak.menuKontrak()
+            })
+        })
+    }
 
-                rl.question(`Masukan ID yang akan dirubah nilainya : `, (ketikan2) => {
-                    console.log(`==============================================================================================`)
-
-                    rl.question(`tulis nilai yang baru : `, (ketikan3) => {
-                        console.log(`==============================================================================================`)
-
-                        const sql = (`UPDATE Kontrak SET Nilai = ? WHERE ID = ?`)
-                        db.run(sql, [ketikan3, ketikan2], (err) => {
+    static tambahKontrak() {
+        console.log(`Lengkapi data di bawah ini :`);
+        db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            var kontrak = new Table({
+                head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                , colWidths: [5, 15, 15, 20, 15, 7]
+            });
+            rows.forEach((item, index) => {
+                kontrak.push(
+                    [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+            })
+            console.log(kontrak.toString());
+            rl.question(`Kode NIM : `, (ketikan) => {
+                db.all('SELECT * FROM Matkul', (err, rows) => {
+                    if (err) return console.log('gagal ambil data', err);
+                    var matkul = new Table({
+                        head: ['Kode Matkul', 'Nama Matkul', 'SKS']
+                        , colWidths: [15, 20, 5]
+                    });
+                    rows.forEach((item, index) => {
+                        matkul.push(
+                            [item['Kode Matkul'], item['Nama Matkul'], item.SKS])
+                    })
+                    console.log(matkul.toString());
+                    rl.question(`Masukan Kode Mata Kuliah : `, (ketikan2) => {
+                        db.all('SELECT * FROM Dosen', (err, rows) => {
                             if (err) return console.log('gagal ambil data', err);
-                            console.log(`Nilai telah di update`);
-                            db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
-                                if (err) return console.log('gagal ambil data', err);
-                                var kontrak = new Table({
-                                    head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
-                                    , colWidths: [5, 15, 15, 20, 15, 7]
-                                });
-                                rows.forEach((item, index) => {
-                                    kontrak.push(
-                                        [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+                            var dosen = new Table({
+                                head: ['NIP', 'Nama Dosen']
+                                , colWidths: [10, 20]
+                            });
+                            rows.forEach((item, index) => {
+                                dosen.push(
+                                    [item.NIP, item['Nama Dosen']])
+                            })
+                            console.log(dosen.toString());
+                            rl.question(`Masukan NIP Dosen : `, (ketikan3) => {
+                                rl.question(`Masukan Nilai : `, (ketikan4) => {
+                                    const sql = (`INSERT INTO Kontrak ('NIM', 'Kode Matkul', 'NIP','NILAI') VALUES (?,?,?,?)`)
+                                    db.run(sql, [ketikan, ketikan2, ketikan3, ketikan4], (err) => {
+                                        if (err) return console.log('gagal ambil data', err);
+                                        console.log(`Kontrak telah ditambahkan`);
+                                        db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+                                            if (err) return console.log('gagal ambil data', err);
+                                            var kontrak = new Table({
+                                                head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                                                , colWidths: [5, 15, 15, 20, 15, 7]
+                                            });
+                                            rows.forEach((item, index) => {
+                                                kontrak.push(
+                                                    [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+                                            })
+                                            console.log(kontrak.toString());
+                                            console.log(`==============================================================================================`)
+                                            Kontrak.menuKontrak()
+                                        })
+                                    })
                                 })
-                                console.log(kontrak.toString());
-                                console.log(`==============================================================================================`)
-                                menuKontrak()
                             })
                         })
                     })
                 })
             })
         })
-    })
+    }
+
+    static hapusKontrak() {
+        rl.question('Masukan ID Kontrak : ', (ketikan) => {
+            const sql = (`DELETE FROM Kontrak WHERE ID = ?`);
+            db.run(sql, [ketikan], (err) => {
+                if (err) return console.log('gagal ambil data', err);
+                console.log(`Data Kontrak engan ID ${ketikan}, telah dihapus`);
+                console.log(`==============================================================================================`);
+                Kontrak.menuKontrak()
+            })
+        })
+    }
+
+    static updateKontrak() {
+        db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            var kontrak = new Table({
+                head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                , colWidths: [5, 15, 15, 20, 15, 7]
+            });
+            rows.forEach((item, index) => {
+                kontrak.push(
+                    [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+            })
+            console.log(kontrak.toString());
+            rl.question(`Masukan nim Mahasiswa : `, (ketikan) => {
+                const sql = (`SELECT * FROM Kontrak WHERE NIM = ?`)
+                db.all(sql, [ketikan], (err, row) => {
+                    if (err) return console.log('gagal ambil data', err);
+                    var kontrak = new Table({
+                        head: ['ID', 'NIM', 'Kode Matkul', 'NIP', 'Nilai']
+                        , colWidths: [5, 15, 15, 10, 7]
+                    });
+                    row.forEach((item, index) => {
+                        kontrak.push(
+                            [item.ID, item.NIM, item['Kode Matkul'], item.NIP, item.Nilai])
+                    })
+                    console.log(`==============================================================================================`)
+                    console.log(`Detail Mahasiswa dengan NIM '${ketikan}' :`);
+                    console.log(kontrak.toString());
+
+                    rl.question(`Masukan ID yang akan dirubah nilainya : `, (ketikan2) => {
+                        console.log(`==============================================================================================`)
+
+                        rl.question(`tulis nilai yang baru : `, (ketikan3) => {
+                            console.log(`==============================================================================================`)
+
+                            const sql = (`UPDATE Kontrak SET Nilai = ? WHERE ID = ?`)
+                            db.run(sql, [ketikan3, ketikan2], (err) => {
+                                if (err) return console.log('gagal ambil data', err);
+                                console.log(`Nilai telah di update`);
+                                db.all(`SELECT Kontrak.ID, Kontrak.NIM, Mahasiswa.Nama, Matkul.'Nama Matkul' as 'Mata Kuliah', Dosen.'Nama Dosen' as Dosen, Kontrak.Nilai FROM Kontrak INNER JOIN Mahasiswa ON Kontrak.NIM = Mahasiswa.NIM INNER JOIN Matkul ON Kontrak.'Kode Matkul' = Matkul.'Kode Matkul' INNER JOIN Dosen ON Kontrak.NIP = Dosen.NIP`, (err, rows) => {
+                                    if (err) return console.log('gagal ambil data', err);
+                                    var kontrak = new Table({
+                                        head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                                        , colWidths: [5, 15, 15, 20, 15, 7]
+                                    });
+                                    rows.forEach((item, index) => {
+                                        kontrak.push(
+                                            [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+                                    })
+                                    console.log(kontrak.toString());
+                                    console.log(`==============================================================================================`)
+                                    Kontrak.menuKontrak()
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        })
+    }
 }
