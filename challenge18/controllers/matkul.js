@@ -1,8 +1,7 @@
 import ModelMatkul from "../models/matkul.js";
-import ViewMatkul from "../views/matkul.js";
-import Table from "cli-table";
+import ViewMatkul from "../views/matkul.js"
 import Utama, { rl } from "../challenge18.js";
-
+import Table from "cli-table";
 
 export default class Matkul {
     static menuMatkul() {
@@ -35,9 +34,9 @@ export default class Matkul {
             head: ['Kode Matkul', 'Nama Matkul', 'SKS']
             , colWidths: [15, 20, 5]
         });
-        ModelMatkul.daftarMatkul('SELECT * FROM Matkul', (err, rows) => {
+        ModelMatkul.daftarMatkul((err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            rows.forEach((item, index) => {
+            rows.forEach((item) => {
                 matkul.push(
                     [item['Kode Matkul'], item['Nama Matkul'], item.SKS])
             })
@@ -48,23 +47,22 @@ export default class Matkul {
     }
 
     static cariMataKuiah() {
-        rl.question('Masukan Kode Mata Kuliah : ', (ketikan) => {
-            const sql = (`SELECT * FROM Matkul WHERE "Kode Matkul" = ?`)
-            ModelMatkul.cariMataKuiah(sql, [ketikan], (err, row) => {
+        rl.question('Masukan Kode Mata Kuliah : ', (kodeMatkul) => {
+            ModelMatkul.cariMataKuiah(kodeMatkul, (err, rows) => {
                 if (err) return console.log('gagal ambil data', err);
-                if (row) {
+                if (rows) {
                     console.log(`==============================================================================================`);
                     console.log(`
-                        Detail Jurusan dengan Kode ${ketikan} :
-                        Kode Mata Kuliah  : ${row['Kode Matkul']}
-                        Nama Mata Kuliah  : ${row['Nama Matkul']}
-                        SKS               : ${row.SKS}
+                        Detail Jurusan dengan Kode ${kodeMatkul} :
+                        Kode Mata Kuliah  : ${rows['Kode Matkul']}
+                        Nama Mata Kuliah  : ${rows['Nama Matkul']}
+                        SKS               : ${rows.SKS}
                         `);
                     console.log(`==============================================================================================`);
                     Matkul.menuMatkul()
                 }
                 else {
-                    console.log(`Mata Kuliah dengan Kode ${ketikan} tidak terdaftar`);
+                    console.log(`Mata Kuliah dengan Kode ${kodeMatkul} tidak terdaftar`);
                     console.log(`==============================================================================================`);
                     Matkul.menuMatkul()
                 }
@@ -74,15 +72,26 @@ export default class Matkul {
 
     static tambahMataKuliah() {
         console.log(`Lengkapi data di bawah ini :`);
-        rl.question(`Kode Mata Kuliah : `, (ketikan) => {
-            rl.question(`Nama Mata Kuliah : `, (ketikan2) => {
-                rl.question(`SKS : `, (ketikan3) => {
-                    const sql = (`INSERT INTO Matkul ('Kode Matkul', 'Nama Matkul', 'SKS') VALUES (?,?,?)`)
-                    ModelMatkul.tambahMataKuliah(sql, [ketikan, ketikan2, ketikan3], (err) => {
-                        if (err) return console.log('gagal ambil data', err);
-                        console.log(`Mata Kuliah telah ditambahkan`);
-                        console.log(`==============================================================================================`)
-                        Matkul.menuMatkul()
+        var matkul = new Table({
+            head: ['Kode Matkul', 'Nama Matkul', 'SKS']
+            , colWidths: [15, 20, 5]
+        });
+        ModelMatkul.daftarMatkul((err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            rows.forEach((item) => {
+                matkul.push(
+                    [item['Kode Matkul'], item['Nama Matkul'], item.SKS])
+            })
+            console.log(matkul.toString());
+            rl.question(`Kode Mata Kuliah : `, (kodeMatkul) => {
+                rl.question(`Nama Mata Kuliah : `, (namaMatkul) => {
+                    rl.question(`SKS : `, (sks) => {
+                        ModelMatkul.tambahMataKuliah(kodeMatkul, namaMatkul, sks, (err) => {
+                            if (err) return console.log('gagal ambil data', err);
+                            console.log(`Mata Kuliah telah ditambahkan`);
+                            console.log(`==============================================================================================`)
+                            Matkul.menuMatkul()
+                        })
                     })
                 })
             })
@@ -90,11 +99,10 @@ export default class Matkul {
     }
 
     static hapusMataKuliah() {
-        rl.question('Masukan Kode Mata Kuliah : ', (ketikan) => {
-            const sql = (`DELETE FROM Matkul WHERE "Kode Matkul" = ?`);
-            ModelMatkul.hapusMataKuliah(sql, [ketikan], (err) => {
+        rl.question('Masukan Kode Mata Kuliah : ', (kodeMatkul) => {
+            ModelMatkul.hapusMataKuliah(kodeMatkul, (err) => {
                 if (err) return console.log('gagal ambil data', err);
-                console.log(`Data Mata Kuliah ${ketikan}, telah dihapus`);
+                console.log(`Data Mata Kuliah ${kodeMatkul}, telah dihapus`);
                 console.log(`==============================================================================================`);
                 Matkul.menuMatkul()
             })

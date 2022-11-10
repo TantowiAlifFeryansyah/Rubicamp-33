@@ -1,7 +1,8 @@
 import ModelMahasiswa from "../models/mahasiswa.js";
-import ViewMahasiswa from "../views/mahasiswa.js";
-import Table from "cli-table";
+import ViewMahasiswa from "../views/mahasiswa.js"
 import Utama, { rl } from "../challenge18.js";
+import Table from "cli-table";
+import ModelJurusan from "../models/jurusan.js";
 
 export default class Mahasiswa {
     static menuMahasiswa() {
@@ -36,7 +37,7 @@ export default class Mahasiswa {
         });
         ModelMahasiswa.daftarMahasiswa((err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            rows.forEach((item, index) => {
+            rows.forEach((item) => {
                 mahasiswa.push(
                     [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
             })
@@ -47,23 +48,23 @@ export default class Mahasiswa {
     }
 
     static cariMahasiswa() {
-        rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-            ModelMahasiswa.cariMahasiswa(ketikan, (err, row) => {
+        rl.question('Masukan NIM Mahasiswa : ', (nim) => {
+            ModelMahasiswa.cariMahasiswa(nim, (err, rows) => {
                 if (err) return console.log('gagal ambil data', err);
-                if (row) {
+                if (rows) {
                     console.log(`==============================================================================================`);
                     console.log(`
-                        Detail Mahasiswa dengan NIM ${ketikan} :
-                        NIM     : ${row.NIM}
-                        Nama    : ${row.Nama}
-                        Alamat  : ${row.Alamat}
-                        Jurusan : ${row['Nama Jurusan']}
+                        Detail Mahasiswa dengan NIM ${nim} :
+                        NIM     : ${rows.NIM}
+                        Nama    : ${rows.Nama}
+                        Alamat  : ${rows.Alamat}
+                        Jurusan : ${rows['Nama Jurusan']}
                         `);
                     console.log(`==============================================================================================`);
                     Mahasiswa.menuMahasiswa()
                 }
                 else {
-                    console.log(`Mahasiswa dengan NIM ${ketikan} tidak terdaftar`);
+                    console.log(`Mahasiswa dengan NIM ${nim} tidak terdaftar`);
                     console.log(`==============================================================================================`);
                     Mahasiswa.menuMahasiswa()
                 }
@@ -73,42 +74,43 @@ export default class Mahasiswa {
 
     static tambahMahasiswa() {
         console.log(`Lengkapi data di bawah ini :`);
+        var mahasiswa = new Table({
+            head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
+            , colWidths: [13, 10, 15, 15, 15, 20]
+        });
         ModelMahasiswa.daftarMahasiswa((err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            var mahasiswa = new Table({
-                head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
-                , colWidths: [13, 10, 15, 15, 15, 20]
-            });
-            rows.forEach((item, index) => {
+            rows.forEach((item) => {
                 mahasiswa.push(
                     [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
             })
             console.log(mahasiswa.toString());
-            rl.question(`NIM : `, (ketikan) => {
-                rl.question(`Nama : `, (ketikan2) => {
-                    rl.question(`Tanggal Lahir : `, (ketikan3) => {
-                        rl.question(`Alamat : `, (ketikan4) => {
-                            db.all('SELECT * FROM Jurusan', (err, rows) => {
+            rl.question(`NIM : `, (nim) => {
+                rl.question(`Nama : `, (nama) => {
+                    rl.question(`Alamat : `, (alamat) => {
+                        rl.question(`Tanggal Lahir : `, (ttl) => {
+                            var jurusan = new Table({
+                                head: ['Kode Jurusan', 'Nama Jurusan']
+                                , colWidths: [15, 20]
+                            });
+                            ModelJurusan.daftarJurusan((err, rows) => {
                                 if (err) return console.log('gagal ambil data', err);
-                                var jurusan = new Table({
-                                    head: ['Kode Jurusan', 'Nama Jurusan']
-                                    , colWidths: [15, 20]
-                                });
-                                rows.forEach((item, index) => {
+                                rows.forEach((item) => {
                                     jurusan.push(
                                         [item['Kode Jurusan'], item['Nama Jurusan']])
                                 })
                                 console.log(jurusan.toString());
-                                rl.question(`Kode Jurusan : `, (ketikan5) => {
-                                    ModelMahasiswa.tambahMahasiswa(ketikan, ketikan2, ketikan3, ketikan4, ketikan5, (err) => {
+                                rl.question(`Kode Jurusan : `, (kodeJurusan) => {
+                                    ModelMahasiswa.tambahMahasiswa(nim, nama, ttl, alamat, kodeJurusan, (err) => {
                                         if (err) return console.log('gagal ambil data', err);
-                                        console.log((err, rows) => {
+                                        console.log(`Mahasiswa telah ditambahkan`);
+                                        var mahasiswa = new Table({
+                                            head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
+                                            , colWidths: [13, 10, 15, 15, 15, 20]
+                                        });
+                                        ModelMahasiswa.daftarMahasiswa((err, rows) => {
                                             if (err) return console.log('gagal ambil data', err);
-                                            var mahasiswa = new Table({
-                                                head: ['NIM', 'Nama', 'Tanggal Lahir', 'Alamat', 'Kode Jurusan', 'Nama Jurusan']
-                                                , colWidths: [13, 10, 15, 15, 15, 20]
-                                            });
-                                            rows.forEach((item, index) => {
+                                            rows.forEach(item => {
                                                 mahasiswa.push(
                                                     [item.NIM, item.Nama, item['Tanggal Lahir'], item.Alamat, item['Kode Jurusan'], item['Nama Jurusan']])
                                             })
@@ -127,10 +129,10 @@ export default class Mahasiswa {
     }
 
     static hapusMahasiswa() {
-        rl.question('Masukan NIM Mahasiswa : ', (ketikan) => {
-            ModelMahasiswa.hapusMahasiswa(ketikan, (err) => {
+        rl.question('Masukan NIM Mahasiswa : ', (nim) => {
+            ModelMahasiswa.hapusMahasiswa(nim, (err) => {
                 if (err) return console.log('gagal ambil data', err);
-                console.log(`Detail Mahasiswa ${ketikan}, telah dihapus`);
+                console.log(`Detail Mahasiswa ${nim}, telah dihapus`);
                 console.log(`==============================================================================================`);
                 Mahasiswa.menuMahasiswa()
             })

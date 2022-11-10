@@ -1,8 +1,7 @@
-import ViewJurusan from "../views/jurusan.js";
 import ModelJurusan from "../models/jurusan.js";
-import Table from "cli-table";
+import ViewJurusan from "../views/jurusan.js"
 import Utama, { rl } from "../challenge18.js";
-
+import Table from "cli-table";
 
 export default class Jurusan {
     static menuJurusan() {
@@ -35,9 +34,9 @@ export default class Jurusan {
             head: ['Kode Jurusan', 'Nama Jurusan']
             , colWidths: [15, 20]
         });
-        ModelJurusan.daftarJurusan('SELECT * FROM Jurusan', (err, rows) => {
+        ModelJurusan.daftarJurusan((err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            rows.forEach((item, index) => {
+            rows.forEach(item => {
                 jurusan.push(
                     [item['Kode Jurusan'], item['Nama Jurusan']])
             })
@@ -48,22 +47,21 @@ export default class Jurusan {
     }
 
     static cariJurusan() {
-        rl.question('Masukan Kode Jurusan : ', (ketikan) => {
-            const sql = (`SELECT * FROM Jurusan WHERE "Kode Jurusan" = ?`)
-            ModelJurusan.cariJurusan(sql, [ketikan], (err, row) => {
+        rl.question('Masukan Kode Jurusan : ', (kodeJurusan) => {
+            ModelJurusan.cariJurusan(kodeJurusan, (err, rows) => {
                 if (err) return console.log('gagal ambil data', err);
-                if (row) {
+                if (rows) {
                     console.log(`==============================================================================================`);
                     console.log(`
-                        Detail Jurusan dengan Kode ${ketikan} :
-                        Kode Jurusan  : ${row['Kode Jurusan']}
-                        Nama Jurusan  : ${row['Nama Jurusan']}
+                        Detail Jurusan dengan Kode ${kodeJurusan} :
+                        Kode Jurusan  : ${rows['Kode Jurusan']}
+                        Nama Jurusan  : ${rows['Nama Jurusan']}
                         `);
                     console.log(`==============================================================================================`);
                     Jurusan.menuJurusan()
                 }
                 else {
-                    console.log(`Jurusan dengan Kode Jurusan ${ketikan} tidak terdaftar`);
+                    console.log(`Jurusan dengan Kode Jurusan ${kodeJurusan} tidak terdaftar`);
                     console.log(`==============================================================================================`);
                     Jurusan.menuJurusan()
                 }
@@ -73,21 +71,20 @@ export default class Jurusan {
 
     static tambahJurusan() {
         console.log(`Lengkapi data di bawah ini :`);
-        ModelJurusan.daftarJurusan('SELECT * FROM Jurusan', (err, rows) => {
+        var jurusan = new Table({
+            head: ['Kode Jurusan', 'Nama Jurusan']
+            , colWidths: [15, 20]
+        });
+        ModelJurusan.daftarJurusan((err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            var jurusan = new Table({
-                head: ['Kode Jurusan', 'Nama Jurusan']
-                , colWidths: [15, 20]
-            });
-            rows.forEach((item, index) => {
+            rows.forEach(item => {
                 jurusan.push(
                     [item['Kode Jurusan'], item['Nama Jurusan']])
             })
             console.log(jurusan.toString());
-            rl.question(`Kode Jurusan : `, (ketikan) => {
-                rl.question(`Nama Jurusan : `, (ketikan2) => {
-                    const sql = (`INSERT INTO Jurusan ("Kode Jurusan", "Nama Jurusan") VALUES (?,?)`)
-                ModelJurusan.tambahJurusan(sql, [ketikan, ketikan2], (err) => {
+            rl.question(`Kode Jurusan : `, (kodeJurusan) => {
+                rl.question(`Nama Jurusan : `, (namaJurusan) => {
+                    ModelJurusan.tambahJurusan(kodeJurusan, namaJurusan, (err) => {
                         if (err) return console.log('gagal ambil data', err);
                         console.log(`Jurusan telah ditambahkan ke database`);
                         console.log(`==============================================================================================`)
@@ -99,11 +96,10 @@ export default class Jurusan {
     }
 
     static hapusJurusan() {
-        rl.question('Masukan Kode Jurusan : ', (ketikan) => {
-            const sql = (`DELETE FROM Jurusan WHERE "Kode Jurusan" = ?`);
-            ModelJurusan.hapusJurusan(sql, [ketikan], (err) => {
+        rl.question('Masukan Kode Jurusan : ', (kodeJurusan) => {
+            ModelJurusan.hapusJurusan(kodeJurusan, (err) => {
                 if (err) return console.log('gagal ambil data', err);
-                console.log(`Data Jurusan ${ketikan}, telah dihapus`);
+                console.log(`Data Jurusan ${kodeJurusan}, telah dihapus`);
                 console.log(`==============================================================================================`);
                 Jurusan.menuJurusan()
             })

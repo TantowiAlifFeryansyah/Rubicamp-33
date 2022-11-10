@@ -1,7 +1,7 @@
 import ModelDosen from "../models/dosen.js";
-import ViewDosen from "../views/dosen.js";
-import Table from 'cli-table';
+import ViewDosen from "../views/dosen.js"
 import Utama, { rl } from "../challenge18.js";
+import Table from "cli-table";
 
 export default class Dosen {
     static menuDosen() {
@@ -36,7 +36,7 @@ export default class Dosen {
         });
         ModelDosen.daftarDosen((err, rows) => {
             if (err) return console.log('gagal ambil data', err);
-            rows.forEach((item, index) => {
+            rows.forEach((item) => {
                 dosen.push(
                     [item.NIP, item['Nama Dosen']])
             })
@@ -47,22 +47,21 @@ export default class Dosen {
     }
 
     static cariDosen() {
-        rl.question('Masukan NIP Dosen : ', (ketikan) => {
-            const sql = (`SELECT * FROM Dosen WHERE NIP = ?`)
-            ModelDosen.cariDosen(sql, [ketikan], (err, row) => {
+        rl.question('Masukan NIP Dosen : ', (nip) => {
+            ModelDosen.cariDosen(nip, (err, rows) => {
                 if (err) return console.log('gagal ambil data', err);
-                if (row) {
+                if (rows) {
                     console.log(`==============================================================================================`);
                     console.log(`
-                        Detail Dosen dengan NIP ${ketikan} :
-                        NIP         : ${row.NIP}
-                        Nama Dosen  : ${row['Nama Dosen']}
+                        Detail Dosen dengan NIP ${nip} :
+                        NIP         : ${rows.NIP}
+                        Nama Dosen  : ${rows['Nama Dosen']}
                         `);
                     console.log(`==============================================================================================`);
                     Dosen.menuDosen()
                 }
                 else {
-                    console.log(`Dosen dengan NIP ${ketikan} tidak terdaftar`);
+                    console.log(`Dosen dengan NIP ${nip} tidak terdaftar`);
                     console.log(`==============================================================================================`);
                     Dosen.menuDosen()
                 }
@@ -72,27 +71,49 @@ export default class Dosen {
 
     static tambahDosen() {
         console.log(`Lengkapi data di bawah ini :`);
-        rl.question(`Masukan NIP : `, (ketikan) => {
-            rl.question(`Nama Dosen : `, (ketikan2) => {
-                const sql = (`INSERT INTO Dosen (NIP, 'Nama Dosen') VALUES (?,?)`)
-                ModelDosen.tambahDosen(sql, [ketikan, ketikan2], (err) => {
-                    if (err) return console.log('gagal ambil data', err);
-                    console.log(`Dosen telah ditambahkan`);
-                    console.log(`==============================================================================================`)
-                    Dosen.menuDosen()
+        var dosen = new Table({
+            head: ['NIP', 'Nama Dosen']
+            , colWidths: [10, 20]
+        });
+        ModelDosen.daftarDosen((err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            rows.forEach((item) => {
+                dosen.push(
+                    [item.NIP, item['Nama Dosen']])
+            })
+            console.log(dosen.toString());
+            rl.question(`Masukan NIP : `, (nip) => {
+                rl.question(`Nama Dosen : `, (namaDosen) => {
+                    ModelDosen.tambahDosen(nip, namaDosen, (err) => {
+                        if (err) return console.log('gagal ambil data', err);
+                        console.log(`Dosen telah ditambahkan`);
+                        console.log(`==============================================================================================`)
+                        Dosen.menuDosen()
+                    })
                 })
             })
         })
     }
 
     static hapusDosen() {
-        rl.question('Masukan Kode NIP Dosen : ', (ketikan) => {
-            const sql = (`DELETE FROM Dosen WHERE NIP = ?`);
-            ModelDosen.hapusDosen(sql, [ketikan], (err) => {
-                if (err) return console.log('gagal ambil data', err);
-                console.log(`Detail Dosen ${ketikan}, telah dihapus`);
-                console.log(`==============================================================================================`);
-                Dosen.menuDosen()
+        var dosen = new Table({
+            head: ['NIP', 'Nama Dosen']
+            , colWidths: [10, 20]
+        });
+        ModelDosen.daftarDosen((err, rows) => {
+            if (err) return console.log('gagal ambil data', err);
+            rows.forEach((item) => {
+                dosen.push(
+                    [item.NIP, item['Nama Dosen']])
+            })
+            console.log(dosen.toString());
+            rl.question('Masukan Kode NIP Dosen : ', (nip) => {
+                ModelDosen.hapusDosen(nip, (err) => {
+                    if (err) return console.log('gagal ambil data', err);
+                    console.log(`Detail Dosen ${nip}, telah dihapus`);
+                    console.log(`==============================================================================================`);
+                    Dosen.menuDosen()
+                })
             })
         })
     }
