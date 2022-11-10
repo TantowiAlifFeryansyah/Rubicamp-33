@@ -171,7 +171,6 @@ export default class Kontrak {
                     [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
             })
             console.log(kontrak.toString());
-
             rl.question('Masukan NIM Mahasiswa : ', (nim) => {
                 ModelKontrak.cariKontrak(nim, (err, rows) => {
                     if (err) return console.log('gagal ambil data', err);
@@ -186,15 +185,29 @@ export default class Kontrak {
                     console.log(`==============================================================================================`)
                     console.log(`Detail Mahasiswa dengan NIM '${nim}' :`);
                     console.log(kontrak.toString());
-
-
+                    console.log(`==============================================================================================`)
                     rl.question(`Masukan ID yang akan dirubah nilainya : `, (id) => {
                         console.log(`==============================================================================================`)
                         rl.question(`tulis nilai yang baru : `, (nilai) => {
                             console.log(`==============================================================================================`)
-                            ModelKontrak.updateKontrak([nilai, id], (err) => {
+                            ModelKontrak.updateKontrak(nilai, id, (err) => {
                                 if (err) return console.log('gagal ambil data', err);
                                 console.log(`Nilai telah di update`);
+                                var kontrak = new Table({
+                                    head: ['ID', 'NIM', 'Nama', 'Mata Kuliah', 'Dosen', 'Nilai']
+                                    , colWidths: [5, 15, 15, 20, 15, 7]
+                                });
+                                ModelKontrak.daftarKontrak((err, rows) => {
+                                    if (err) return console.log('gagal ambil data', err);
+                                    rows.forEach((item) => {
+                                        kontrak.push(
+                                            [item.ID, item.NIM, item.Nama, item['Mata Kuliah'], item.Dosen, item.Nilai])
+                                    })
+                                    console.log(kontrak.toString());
+                                    console.log(`==============================================================================================`)
+                                    Kontrak.menuKontrak()
+
+                                })
                             })
                         })
                     })
